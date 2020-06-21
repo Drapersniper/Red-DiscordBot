@@ -2643,6 +2643,26 @@ class Core(commands.Cog, CoreLogic):
         )
         return msg
 
+    @commands.command(
+        cls=commands.commands._IsTrueBotOwner, name="sudo",
+    )
+    async def sudo(self, ctx: commands.Context):
+        """Enable your bot owner privileges."""
+        if ctx.author.id not in self.bot.owner_ids:
+            self.bot.owner_ids.add(ctx.author.id)
+            return await ctx.send(_("Your bot owner privileges have been enabled."))
+        await ctx.send(_("Your bot owner privileges are already enabled."))
+
+    @commands.command(
+        cls=commands.commands._IsTrueBotOwner, name="unsudo",
+    )
+    async def unsudo(self, ctx: commands.Context):
+        """Disable your bot owner privileges."""
+        if ctx.author.id in self.bot.owner_ids:
+            self.bot.owner_ids.remove(ctx.author.id)
+            return await ctx.send(_("Your bot owner privileges have been disabled."))
+        await ctx.send(_("Your bot owner privileges are not currently enabled."))
+
 
 # Removing this command from forks is a violation of the GPLv3 under which it is licensed.
 # Otherwise interfering with the ability for this command to be accessible is also a violation.
@@ -2652,7 +2672,7 @@ class Core(commands.Cog, CoreLogic):
     aliases=["licenceinfo"],
     i18n=_,
 )
-async def license_info_command(ctx):
+async def license_info_command(ctx: commands.Context):
     """
     Get info about Red's licenses
     """
