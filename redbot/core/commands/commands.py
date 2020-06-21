@@ -943,8 +943,6 @@ class _AlwaysAvailableCommand(Command):
 # This is intentionally left out of `__all__` as it is not intended for general use
 class _IsTrueBotOwner(Command):
     """
-    These commands cannot belong to a cog.
-
     These commands do not respect most forms of checks, and
     should only be used with that in mind.
 
@@ -953,8 +951,6 @@ class _IsTrueBotOwner(Command):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.cog is not None:
-            raise TypeError("This command may not be added to a cog")
 
     async def can_run(self, ctx, *args, **kwargs) -> bool:
         return (
