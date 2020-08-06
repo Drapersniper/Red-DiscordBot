@@ -3443,7 +3443,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             return
         await ctx.send(_("Your bot owner privileges are not currently enabled."))
 
-
     # Removing this command from forks is a violation of the GPLv3 under which it is licensed.
     # Otherwise interfering with the ability for this command to be accessible is also a violation.
     @commands.command(
