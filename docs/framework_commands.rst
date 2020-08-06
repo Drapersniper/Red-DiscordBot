@@ -13,6 +13,14 @@ extend functionalities used throughout the bot, as outlined below.
 
 .. autofunction:: redbot.core.commands.group
 
+.. autoclass:: redbot.core.commands.Cog
+
+    .. automethod:: format_help_for_context
+    
+    .. automethod:: red_get_data_for_user
+    
+    .. automethod:: red_delete_data_for_user
+
 .. autoclass:: redbot.core.commands.Command
     :members:
     :inherited-members: format_help_for_context
@@ -34,3 +42,19 @@ extend functionalities used throughout the bot, as outlined below.
     :members:
     :exclude-members: convert
     :no-undoc-members:
+
+    .. autoclass:: APIToken
+
+******************
+Help Functionality
+******************
+
+.. warning::
+
+    The content in this section is provisional and may change
+    without prior notice or warning. Updates to this will be communicated
+    on `this issue <https://github.com/Cog-Creators/Red-DiscordBot/issues/4084>`_
+
+
+.. automodule:: redbot.core.commands.help
+    :members:
