@@ -1430,7 +1430,7 @@ class RedBase(
 
     async def _delete_delay(self, ctx: commands.Context):
         """Currently used for:
-            * delete delay"""
+        * delete delay"""
         guild = ctx.guild
         if guild is None:
             return
