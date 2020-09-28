@@ -417,7 +417,7 @@ class Cleanup(commands.Cog):
         alias_cog = self.bot.get_cog("Alias")
         if alias_cog is not None:
             alias_names: Set[str] = set(
-                (a.name for a in await alias_cog._aliases.get_global_aliases())
+                a.name for a in await alias_cog._aliases.get_global_aliases()
             ) | set(a.name for a in await alias_cog._aliases.get_guild_aliases(ctx.guild))
             is_alias = lambda name: name in alias_names
         else:
@@ -558,10 +558,7 @@ class Cleanup(commands.Cog):
                 return False
 
         to_delete = await self.get_messages_for_deletion(
-            channel=ctx.channel,
-            limit=number,
-            check=check,
-            before=ctx.message,
+            channel=ctx.channel, limit=number, check=check, before=ctx.message
         )
 
         if len(to_delete) > 100:

@@ -63,9 +63,9 @@ def init_events(bot, cli_flags):
 
         if app_info.team:
             if bot._use_team_features:
-                bot._true_owner_ids.update(m.id for m in app_info.team.members)
+                bot.owner_ids.update(m.id for m in app_info.team.members)
         elif bot._owner_id_overwrite is None:
-            bot._true_owner_ids.add(app_info.owner.id)
+            bot.owner_ids.add(app_info.owner.id)
         bot._app_owners_fetched = True
 
         try:
@@ -115,9 +115,7 @@ def init_events(bot, cli_flags):
                     "**we highly recommend you to read the update docs at <{docs}> and "
                     "make sure there is nothing else that "
                     "needs to be done during the update.**"
-                ).format(
-                    docs="https://docs.discord.red/en/stable/update_red.html",
-                )
+                ).format(docs="https://docs.discord.red/en/stable/update_red.html")
                 if expected_version(current_python, py_version_req):
                     installed_extras = []
                     for extra, reqs in red_pkg._dep_map.items():
@@ -196,7 +194,7 @@ def init_events(bot, cli_flags):
                 "Looking for a quick guide on setting up Red? https://docs.discord.red/en/stable/getting_started.html\n"
             )
 
-        if not bot._true_owner_ids:
+        if not bot.owner_ids:
             # we could possibly exit here in future
             log.warning("Bot doesn't have any owner set!")
 
@@ -226,8 +224,7 @@ def init_events(bot, cli_flags):
             await ctx.send_help()
         elif isinstance(error, commands.ArgParserFailure):
             msg = _("`{user_input}` is not a valid value for `{command}`").format(
-                user_input=error.user_input,
-                command=error.cmd,
+                user_input=error.user_input, command=error.cmd
             )
             if error.custom_help_msg:
                 msg += f"\n{error.custom_help_msg}"
@@ -300,12 +297,17 @@ def init_events(bot, cli_flags):
                 msg = _("This command is on cooldown. Try again in 1 second.")
             await ctx.send(msg, delete_after=error.retry_after)
         elif isinstance(error, commands.MaxConcurrencyReached):
-            await ctx.send(
-                _(
+            if error.per is commands.BucketType.default:
+                msg = _(
+                    "Too many people using this command."
+                    " It can only be used {number} time(s) concurrently."
+                ).format(number=error.number)
+            else:
+                msg = _(
                     "Too many people using this command."
                     " It can only be used {number} time(s) per {type} concurrently."
                 ).format(number=error.number, type=error.per.name)
-            )
+            await ctx.send(msg)
         else:
             log.exception(type(error).__name__, exc_info=error)
 
