@@ -39,6 +39,7 @@ if TYPE_CHECKING:
 main_log = logging.getLogger("red")
 
 __all__ = (
+    "timed_unsudo",
     "safe_delete",
     "fuzzy_command_search",
     "format_fuzzy_results",
@@ -213,6 +214,7 @@ async def create_backup(dest: Path = Path.home()) -> Optional[Path]:
         os.path.join("Downloader", "lib"),
         os.path.join("CogManager", "cogs"),
         os.path.join("RepoManager", "repos"),
+        os.path.join("Audio", "logs"),
     ]
 
     # Avoiding circular imports
@@ -327,3 +329,9 @@ def is_sudo_enabled():
         return ctx.bot._sudo_enabled
 
     return check(predicate)
+
+
+async def timed_unsudo(user_id: int, bot: Red):
+    await asyncio.sleep(delay=await bot._config.sudotime())
+    bot.owner_ids.discard(user_id)
+    bot._owner_sudo_tasks.pop(user_id, None)
