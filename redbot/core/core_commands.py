@@ -1574,20 +1574,24 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         global_data = await ctx.bot._config.all()
         locale = global_data["locale"]
         regional_format = global_data["regional_format"] or _("Same as bot's locale")
-
+        sudotime = (
+            humanize_timedelta(seconds=global_data["sudotime"]) if ctx.bot._sudo_enabled else ""
+        )
         prefix_string = " ".join(prefixes)
         settings = _(
             "{bot_name} Settings:\n\n"
             "Prefixes: {prefixes}\n"
             "{guild_settings}"
             "Locale: {locale}\n"
-            "Regional format: {regional_format}"
+            "Regional format: {regional_format}\n"
+            "{sudotime}"
         ).format(
             bot_name=ctx.bot.user.name,
             prefixes=prefix_string,
             guild_settings=guild_settings,
             locale=locale,
             regional_format=regional_format,
+            sudotime=sudotime,
         )
         for page in pagify(settings):
             await ctx.send(box(page))
