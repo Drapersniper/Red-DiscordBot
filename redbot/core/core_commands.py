@@ -440,9 +440,9 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         outdated = pypi_version and pypi_version > red_version_info
 
         if embed_links:
-            dpy_version = "[{}]({})".format(discord.__version__, dpy_repo)
+            dpy_version = f"[{discord.__version__}]({dpy_repo})"
             python_version = "[{}.{}.{}]({})".format(*sys.version_info[:3], python_url)
-            red_version = "[{}]({})".format(__version__, red_pypi)
+            red_version = f"[{__version__}]({red_pypi})"
 
             about = _(
                 "This bot is an instance of [Red, an open source Discord bot]({}) "
@@ -479,8 +479,8 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             await ctx.send(embed=embed)
         else:
             python_version = "{}.{}.{}".format(*sys.version_info[:3])
-            dpy_version = "{}".format(discord.__version__)
-            red_version = "{}".format(__version__)
+            dpy_version = f"{discord.__version__}"
+            red_version = f"{__version__}"
 
             about = _(
                 "This bot is an instance of Red, an open source Discord bot (1) "
@@ -1524,7 +1524,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                 "you can invite me on new servers.\n\n"
                 "You can change this by ticking `Public bot` in "
                 "your token settings: "
-                "https://discord.com/developers/applications/{0}/bot".format(self.bot.user.id)
+                "https://discord.com/developers/applications/{}/bot".format(self.bot.user.id)
             )
             return
         if not confirm:
@@ -3156,9 +3156,9 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         joined = _("Set API services:\n") if len(services) > 1 else _("Set API service:\n")
         for service_name in sorted_services:
-            joined += "+ {}\n".format(service_name)
+            joined += f"+ {service_name}\n"
             for key_name in services[service_name].keys():
-                joined += "  - {}\n".format(key_name)
+                joined += f"  - {key_name}\n"
         for page in pagify(joined, ["\n"], shorten_by=16):
             await ctx.send(box(page.lstrip(" "), lang="diff"))
 
@@ -4053,10 +4053,10 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
             else:
 
-                msg_text = "{}\nMessage:\n\n{}\n{}".format(description, message, footer)
+                msg_text = f"{description}\nMessage:\n\n{message}\n{footer}"
 
                 try:
-                    await destination.send("{}\n{}".format(content, box(msg_text)))
+                    await destination.send(f"{content}\n{box(msg_text)}")
                 except discord.Forbidden:
                     log.exception(f"Contact failed to {destination}({destination.id})")
                     # Should this automatically opt them out?
@@ -4122,9 +4122,9 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             else:
                 await ctx.send(_("Message delivered to {}").format(destination))
         else:
-            response = "{}\nMessage:\n\n{}".format(description, message)
+            response = f"{description}\nMessage:\n\n{message}"
             try:
-                await destination.send("{}\n{}".format(box(response), content))
+                await destination.send(f"{box(response)}\n{content}")
             except discord.HTTPException:
                 await ctx.send(
                     _("Sorry, I couldn't deliver your message to {}").format(destination)
@@ -4187,9 +4187,9 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         def _datasize(num: int):
             for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
                 if abs(num) < 1024.0:
-                    return "{0:.1f}{1}".format(num, unit)
+                    return f"{num:.1f}{unit}"
                 num /= 1024.0
-            return "{0:.1f}{1}".format(num, "YB")
+            return "{:.1f}{}".format(num, "YB")
 
         memory_ram = psutil.virtual_memory()
         ram_string = "{used}/{total} ({percent}%)".format(

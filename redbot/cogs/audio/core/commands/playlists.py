@@ -878,7 +878,7 @@ class PlaylistCommands(MixinMeta, metaclass=CompositeMetaClass):
                                 query.to_string_user(),
                             )
                         else:
-                            msg += "`{}.` {}\n".format(track_idx, query.to_string_user())
+                            msg += f"`{track_idx}.` {query.to_string_user()}\n"
                     else:
                         msg += "`{}.` **[{}]({})**\n".format(
                             track_idx, track["info"]["title"], track["info"]["uri"]

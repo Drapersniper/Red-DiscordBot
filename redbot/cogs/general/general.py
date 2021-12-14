@@ -218,7 +218,7 @@ class General(commands.Cog):
     async def lmgtfy(self, ctx, *, search_terms: str):
         """Create a lmgtfy link."""
         search_terms = escape(urllib.parse.quote_plus(search_terms), mass_mentions=True)
-        await ctx.send("https://lmgtfy.app/?q={}".format(search_terms))
+        await ctx.send(f"https://lmgtfy.app/?q={search_terms}")
 
     @commands.command(hidden=True)
     @commands.guild_only()
@@ -237,7 +237,7 @@ class General(commands.Cog):
         elif intensity <= 9:
             msg = "(つ≧▽≦)つ" + name
         elif intensity >= 10:
-            msg = "(づ￣ ³￣)づ{} ⊂(´・ω・｀⊂)".format(name)
+            msg = f"(づ￣ ³￣)づ{name} ⊂(´・ω・｀⊂)"
         else:
             # For the purposes of "msg might not be defined" linter errors
             raise RuntimeError
@@ -288,16 +288,16 @@ class General(commands.Cog):
             def _size(num: int):
                 for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
                     if abs(num) < 1024.0:
-                        return "{0:.1f}{1}".format(num, unit)
+                        return f"{num:.1f}{unit}"
                     num /= 1024.0
-                return "{0:.1f}{1}".format(num, "YB")
+                return "{:.1f}{}".format(num, "YB")
 
             def _bitsize(num: int):
                 for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
                     if abs(num) < 1000.0:
-                        return "{0:.1f}{1}".format(num, unit)
+                        return f"{num:.1f}{unit}"
                     num /= 1000.0
-                return "{0:.1f}{1}".format(num, "YB")
+                return "{:.1f}{}".format(num, "YB")
 
             shard_info = (
                 _("\nShard ID: **{shard_id}/{shard_count}**").format(
@@ -512,13 +512,13 @@ class General(commands.Cog):
                         word=ud["word"].capitalize(), author=ud["author"]
                     )
                     if len(title) > 256:
-                        title = "{}...".format(title[:253])
+                        title = f"{title[:253]}..."
                     embed.title = title
                     embed.url = ud["permalink"]
 
                     description = _("{definition}\n\n**Example:** {example}").format(**ud)
                     if len(description) > 2048:
-                        description = "{}...".format(description[:2045])
+                        description = f"{description[:2045]}..."
                     embed.description = description
 
                     embed.set_footer(
@@ -549,7 +549,7 @@ class General(commands.Cog):
 
                     description = _("{definition}\n\n**Example:** {example}").format(**ud)
                     if len(description) > max_desc_len:
-                        description = "{}...".format(description[: max_desc_len - 3])
+                        description = f"{description[: max_desc_len - 3]}..."
 
                     message = message.format(description=description)
                     messages.append(message)

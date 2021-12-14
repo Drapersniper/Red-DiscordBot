@@ -34,7 +34,7 @@ class TunnelMeta(type):
                     # if this isn't temporarily stored, the weakref dict
                     # will discard this before the return statement,
                     # causing a key error
-                    temp = super(TunnelMeta, cls).__call__(*args, **kwargs)
+                    temp = super().__call__(*args, **kwargs)
                     _instances[lockout_tuple] = temp
                     return temp
             except:  # NOQA: E722

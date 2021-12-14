@@ -67,7 +67,7 @@ class Image(commands.Cog):
                 ).format(prefix=ctx.clean_prefix)
             )
             return
-        headers = {"Authorization": "Client-ID {}".format(imgur_client_id)}
+        headers = {"Authorization": f"Client-ID {imgur_client_id}"}
         async with self.session.get(url, headers=headers, params=params) as search_get:
             data = await search_get.json()
 
@@ -131,8 +131,8 @@ class Image(commands.Cog):
             return
 
         links = []
-        headers = {"Authorization": "Client-ID {}".format(imgur_client_id)}
-        url = self.imgur_base_url + "gallery/r/{}/{}/{}/0".format(subreddit, sort, window)
+        headers = {"Authorization": f"Client-ID {imgur_client_id}"}
+        url = self.imgur_base_url + f"gallery/r/{subreddit}/{sort}/{window}/0"
 
         async with self.session.get(url, headers=headers) as sub_get:
             data = await sub_get.json()

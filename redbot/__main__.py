@@ -60,7 +60,7 @@ def list_instances():
     else:
         text = "Configured Instances:\n\n"
         for instance_name in _get_instance_names():
-            text += "{}\n".format(instance_name)
+            text += f"{instance_name}\n"
         print(text)
         sys.exit(0)
 
@@ -80,24 +80,24 @@ def debug_info():
     dpy_version = discord.__version__
     if IS_WINDOWS:
         os_info = platform.uname()
-        osver = "{} {} (version {})".format(os_info.system, os_info.release, os_info.version)
+        osver = f"{os_info.system} {os_info.release} (version {os_info.version})"
     elif IS_MAC:
         os_info = platform.mac_ver()
-        osver = "Mac OSX {} {}".format(os_info[0], os_info[2])
+        osver = f"Mac OSX {os_info[0]} {os_info[2]}"
     else:
         osver = f"{distro.name()} {distro.version()}".strip()
     user_who_ran = getpass.getuser()
     info = (
         "Debug Info for Red\n\n"
-        + "Red version: {}\n".format(redver)
-        + "Python version: {}\n".format(pyver)
-        + "Python executable: {}\n".format(sys.executable)
-        + "Discord.py version: {}\n".format(dpy_version)
-        + "Pip version: {}\n".format(pipver)
-        + "OS version: {}\n".format(osver)
-        + "System arch: {}\n".format(platform.machine())
-        + "User: {}\n".format(user_who_ran)
-        + "Metadata file: {}\n".format(data_manager.config_file)
+        + f"Red version: {redver}\n"
+        + f"Python version: {pyver}\n"
+        + f"Python executable: {sys.executable}\n"
+        + f"Discord.py version: {dpy_version}\n"
+        + f"Pip version: {pipver}\n"
+        + f"OS version: {osver}\n"
+        + f"System arch: {platform.machine()}\n"
+        + f"User: {user_who_ran}\n"
+        + f"Metadata file: {data_manager.config_file}\n"
     )
     print(info)
     sys.exit(0)
@@ -430,7 +430,7 @@ def handle_early_exit_flags(cli_flags: Namespace):
         list_instances()
     elif cli_flags.version:
         print("Red V3")
-        print("Current Version: {}".format(__version__))
+        print(f"Current Version: {__version__}")
         sys.exit(0)
     elif cli_flags.debuginfo:
         debug_info()

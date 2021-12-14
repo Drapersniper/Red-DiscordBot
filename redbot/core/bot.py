@@ -1820,7 +1820,7 @@ class Red(
         async def _delete_helper(m):
             with contextlib.suppress(discord.HTTPException):
                 await m.delete()
-                log.debug("Deleted command msg {}".format(m.id))
+                log.debug(f"Deleted command msg {m.id}")
 
         await asyncio.sleep(delay)
         await _delete_helper(message)

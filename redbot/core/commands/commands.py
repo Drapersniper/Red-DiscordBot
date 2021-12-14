@@ -100,7 +100,7 @@ class CogCommandMixin:
             checks=getattr(decorated, "__requires_checks__", []),
         )
 
-    def format_text_for_context(self, ctx: "Context", text: str) -> str:
+    def format_text_for_context(self, ctx: Context, text: str) -> str:
         """
         This formats text based on values in context
 
@@ -139,7 +139,7 @@ class CogCommandMixin:
 
         return formatting_pattern.sub(replacement, text)
 
-    def format_help_for_context(self, ctx: "Context") -> str:
+    def format_help_for_context(self, ctx: Context) -> str:
         """
         This formats the help string based on values in context
 
@@ -171,7 +171,7 @@ class CogCommandMixin:
 
         return self.format_text_for_context(ctx, help_str)
 
-    def allow_for(self, model_id: Union[int, str], guild_id: int) -> None:
+    def allow_for(self, model_id: int | str, guild_id: int) -> None:
         """Actively allow this command for the given model.
 
         Parameters
@@ -186,7 +186,7 @@ class CogCommandMixin:
         """
         self.requires.set_rule(model_id, PermState.ACTIVE_ALLOW, guild_id=guild_id)
 
-    def deny_to(self, model_id: Union[int, str], guild_id: int) -> None:
+    def deny_to(self, model_id: int | str, guild_id: int) -> None:
         """Actively deny this command to the given model.
 
         Parameters
@@ -206,8 +206,8 @@ class CogCommandMixin:
             self.requires.set_rule(model_id, PermState.ACTIVE_DENY, guild_id=guild_id)
 
     def clear_rule_for(
-        self, model_id: Union[int, str], guild_id: int
-    ) -> Tuple[PermState, PermState]:
+        self, model_id: int | str, guild_id: int
+    ) -> tuple[PermState, PermState]:
         """Clear the rule which is currently set for this model.
 
         Parameters
@@ -231,7 +231,7 @@ class CogCommandMixin:
         self.requires.set_rule(model_id, new_rule, guild_id=guild_id)
         return cur_rule, new_rule
 
-    def set_default_rule(self, rule: Optional[bool], guild_id: int) -> None:
+    def set_default_rule(self, rule: bool | None, guild_id: int) -> None:
         """Set the default rule for this cog or command.
 
         Parameters
@@ -403,7 +403,7 @@ class Command(CogCommandMixin, DPYCommand):
         pass
 
     @property
-    def parents(self) -> List["Group"]:
+    def parents(self) -> list[Group]:
         """List[commands.Group] : Returns all parent commands of this command.
 
         This is sorted by the length of :attr:`.qualified_name` from highest to lowest.
@@ -610,7 +610,7 @@ class Command(CogCommandMixin, DPYCommand):
         else:
             return True
 
-    def allow_for(self, model_id: Union[int, str], guild_id: int) -> None:
+    def allow_for(self, model_id: int | str, guild_id: int) -> None:
         super().allow_for(model_id, guild_id=guild_id)
         parents = self.parents
         if self.cog is not None:
@@ -623,8 +623,8 @@ class Command(CogCommandMixin, DPYCommand):
                 parent.requires.set_rule(model_id, PermState.CAUTIOUS_ALLOW, guild_id=guild_id)
 
     def clear_rule_for(
-        self, model_id: Union[int, str], guild_id: int
-    ) -> Tuple[PermState, PermState]:
+        self, model_id: int | str, guild_id: int
+    ) -> tuple[PermState, PermState]:
         old_rule, new_rule = super().clear_rule_for(model_id, guild_id=guild_id)
         if old_rule is PermState.ACTIVE_ALLOW:
             parents = self.parents
@@ -679,7 +679,7 @@ class Command(CogCommandMixin, DPYCommand):
         """
         return super().error(coro)
 
-    def format_shortdoc_for_context(self, ctx: "Context") -> str:
+    def format_shortdoc_for_context(self, ctx: Context) -> str:
         """
         This formats the short version of the help
         string based on values in context
@@ -739,8 +739,8 @@ class CogGroupMixin:
     requires: Requires
 
     def reevaluate_rules_for(
-        self, model_id: Union[str, int], guild_id: int = 0
-    ) -> Tuple[PermState, bool]:
+        self, model_id: str | int, guild_id: int = 0
+    ) -> tuple[PermState, bool]:
         """Re-evaluate a rule by checking subcommand rules.
 
         This is called when a subcommand is no longer actively allowed.
@@ -768,7 +768,7 @@ class CogGroupMixin:
             # Remaining states can be changed if there exists no actively-allowed
             # subcommand (this includes subcommands multiple levels below)
 
-            all_commands: Dict[str, Command] = getattr(self, "all_commands", {})
+            all_commands: dict[str, Command] = getattr(self, "all_commands", {})
 
             if any(
                 cmd.requires.get_rule(model_id, guild_id=guild_id) in PermStateAllowedStates
@@ -1044,10 +1044,10 @@ class Cog(CogMixin, DPYCog, metaclass=DPYCogMeta):
 
     """
 
-    __cog_commands__: Tuple[Command]
+    __cog_commands__: tuple[Command]
 
     @property
-    def all_commands(self) -> Dict[str, Command]:
+    def all_commands(self) -> dict[str, Command]:
         """
         This does not have identical behavior to
         Group.all_commands but should return what you expect
@@ -1078,7 +1078,7 @@ def group(name=None, cls=Group, **attrs):
 __command_disablers: DisablerDictType = weakref.WeakValueDictionary()
 
 
-def get_command_disabler(guild: discord.Guild) -> Callable[["Context"], Awaitable[bool]]:
+def get_command_disabler(guild: discord.Guild) -> Callable[[Context], Awaitable[bool]]:
     """Get the command disabler for a guild.
 
     A command disabler is a simple check predicate which returns
@@ -1130,22 +1130,22 @@ class _RuleDropper(CogCommandMixin):
     This should not be used by 3rd-party extensions directly for their own objects.
     """
 
-    def allow_for(self, model_id: Union[int, str], guild_id: int) -> None:
+    def allow_for(self, model_id: int | str, guild_id: int) -> None:
         """ This will do nothing. """
 
-    def deny_to(self, model_id: Union[int, str], guild_id: int) -> None:
+    def deny_to(self, model_id: int | str, guild_id: int) -> None:
         """ This will do nothing. """
 
     def clear_rule_for(
-        self, model_id: Union[int, str], guild_id: int
-    ) -> Tuple[PermState, PermState]:
+        self, model_id: int | str, guild_id: int
+    ) -> tuple[PermState, PermState]:
         """
         This will do nothing, except return a compatible rule
         """
         cur_rule = self.requires.get_rule(model_id, guild_id=guild_id)
         return cur_rule, cur_rule
 
-    def set_default_rule(self, rule: Optional[bool], guild_id: int) -> None:
+    def set_default_rule(self, rule: bool | None, guild_id: int) -> None:
         """ This will do nothing. """
 
 

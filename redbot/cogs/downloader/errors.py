@@ -142,7 +142,7 @@ class AmbiguousRevision(GitException):
     Thrown when specified revision is ambiguous.
     """
 
-    def __init__(self, message: str, git_command: str, candidates: List[Candidate]) -> None:
+    def __init__(self, message: str, git_command: str, candidates: list[Candidate]) -> None:
         super().__init__(message, git_command)
         self.candidates = candidates
 

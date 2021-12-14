@@ -203,7 +203,7 @@ def bundled_data_path(cog_instance: commands.Cog) -> Path:
     bundled_path = Path(inspect.getfile(cog_instance.__class__)).parent / "data"
 
     if not bundled_path.is_dir():
-        raise FileNotFoundError("No such directory {}".format(bundled_path))
+        raise FileNotFoundError(f"No such directory {bundled_path}")
 
     return bundled_path
 

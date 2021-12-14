@@ -103,7 +103,7 @@ class EqualizerCommands(MixinMeta, metaclass=CompositeMetaClass):
                     )
 
         await self.send_embed_msg(
-            ctx, title=_("The {preset_name} preset was deleted.".format(preset_name=eq_preset))
+            ctx, title=_(f"The {eq_preset} preset was deleted.")
         )
 
     @command_equalizer.command(name="list")
@@ -154,7 +154,7 @@ class EqualizerCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ctx,
                 title=_("No Preset Found"),
                 description=_(
-                    "Preset named {eq_preset} does not exist.".format(eq_preset=eq_preset)
+                    f"Preset named {eq_preset} does not exist."
                 ),
             )
         except TypeError:
@@ -182,7 +182,7 @@ class EqualizerCommands(MixinMeta, metaclass=CompositeMetaClass):
             content=box(eq.visualise(), lang="ini"),
             embed=discord.Embed(
                 colour=await ctx.embed_colour(),
-                title=_("The {eq_preset} preset was loaded.".format(eq_preset=eq_preset)),
+                title=_(f"The {eq_preset} preset was loaded."),
             ),
         )
         player.store("eq_message", message)

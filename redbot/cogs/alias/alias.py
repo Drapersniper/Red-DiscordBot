@@ -191,7 +191,7 @@ class Alias(commands.Cog):
     async def paginate_alias_list(
         self, ctx: commands.Context, alias_list: List[AliasEntry]
     ) -> None:
-        names = sorted(["+ " + a.name for a in alias_list])
+        names = sorted("+ " + a.name for a in alias_list)
         message = "\n".join(names)
         temp = list(pagify(message, delims=["\n"], page_length=1850))
         alias_list = []

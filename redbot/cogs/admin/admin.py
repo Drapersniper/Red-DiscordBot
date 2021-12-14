@@ -272,7 +272,7 @@ class Admin(commands.Cog):
             `[p]editrole colour Test #ff9900`
         """
         author = ctx.author
-        reason = "{}({}) changed the colour of role '{}'".format(author.name, author.id, role.name)
+        reason = f"{author.name}({author.id}) changed the colour of role '{role.name}'"
 
         if not self.pass_user_hierarchy_check(ctx, role):
             await ctx.send(_(ROLE_USER_HIERARCHY_ISSUE).format(role=role))
@@ -385,7 +385,7 @@ class Admin(commands.Cog):
         guild_roles = guild.roles
 
         valid_roles = tuple(r for r in guild_roles if r.id in selfrole_ids)
-        valid_role_ids = set(r.id for r in valid_roles)
+        valid_role_ids = {r.id for r in valid_roles}
 
         if selfrole_ids != valid_role_ids:
             await self.config.guild(guild).selfroles.set(list(valid_role_ids))

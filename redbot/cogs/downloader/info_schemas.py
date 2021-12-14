@@ -24,9 +24,9 @@ USE_DEFAULT = UseDefault()
 
 
 def ensure_tuple_of_str(
-    info_file: Path, key_name: str, value: Union[Any, UseDefault]
-) -> Tuple[str, ...]:
-    default: Tuple[str, ...] = ()
+    info_file: Path, key_name: str, value: Any | UseDefault
+) -> tuple[str, ...]:
+    default: tuple[str, ...] = ()
     if value is USE_DEFAULT:
         return default
     if not isinstance(value, list):
@@ -51,7 +51,7 @@ def ensure_tuple_of_str(
     return tuple(value)
 
 
-def ensure_str(info_file: Path, key_name: str, value: Union[Any, UseDefault]) -> str:
+def ensure_str(info_file: Path, key_name: str, value: Any | UseDefault) -> str:
     default = ""
     if value is USE_DEFAULT:
         return default
@@ -68,7 +68,7 @@ def ensure_str(info_file: Path, key_name: str, value: Union[Any, UseDefault]) ->
 
 
 def ensure_red_version_info(
-    info_file: Path, key_name: str, value: Union[Any, UseDefault]
+    info_file: Path, key_name: str, value: Any | UseDefault
 ) -> VersionInfo:
     default = red_version_info
     if value is USE_DEFAULT:
@@ -96,8 +96,8 @@ def ensure_red_version_info(
 
 
 def ensure_python_version_info(
-    info_file: Path, key_name: str, value: Union[Any, UseDefault]
-) -> Tuple[int, int, int]:
+    info_file: Path, key_name: str, value: Any | UseDefault
+) -> tuple[int, int, int]:
     default = (3, 5, 1)
     if value is USE_DEFAULT:
         return default
@@ -134,7 +134,7 @@ def ensure_python_version_info(
 
 
 def ensure_bool(
-    info_file: Path, key_name: str, value: Union[Any, UseDefault], *, default: bool = False
+    info_file: Path, key_name: str, value: Any | UseDefault, *, default: bool = False
 ) -> bool:
     if value is USE_DEFAULT:
         return default
@@ -151,9 +151,9 @@ def ensure_bool(
 
 
 def ensure_required_cogs_mapping(
-    info_file: Path, key_name: str, value: Union[Any, UseDefault]
-) -> Dict[str, str]:
-    default: Dict[str, str] = {}
+    info_file: Path, key_name: str, value: Any | UseDefault
+) -> dict[str, str]:
+    default: dict[str, str] = {}
     if value is USE_DEFAULT:
         return default
     if not isinstance(value, dict):
@@ -180,7 +180,7 @@ def ensure_required_cogs_mapping(
 
 
 def ensure_installable_type(
-    info_file: Path, key_name: str, value: Union[Any, UseDefault]
+    info_file: Path, key_name: str, value: Any | UseDefault
 ) -> installable.InstallableType:
     default = installable.InstallableType.COG
     if value is USE_DEFAULT:

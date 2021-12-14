@@ -57,7 +57,7 @@ class DpyEvents(MixinMeta, metaclass=CompositeMetaClass):
             current_perms_set = set(iter(current_perms))
             expected_perms_set = set(iter(self.permission_cache))
             diff = expected_perms_set - current_perms_set
-            missing_perms = dict((i for i in diff if i[-1] is not False))
+            missing_perms = dict(i for i in diff if i[-1] is not False)
             missing_perms = OrderedDict(sorted(missing_perms.items()))
             missing_permissions = missing_perms.keys()
             log.debug(

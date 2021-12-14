@@ -68,7 +68,7 @@ def init_events(bot, cli_flags):
         bot._uptime = datetime.utcnow()
 
         guilds = len(bot.guilds)
-        users = len(set([m for m in bot.get_all_members()]))
+        users = len({m for m in bot.get_all_members()})
 
         invite_url = discord.utils.oauth_url(bot._app_info.id)
 
@@ -175,7 +175,7 @@ def init_events(bot, cli_flags):
             rich_console.print(Columns([Panel(table_general_info, title=str(bot.user.name))]))
 
         rich_console.print(
-            "Loaded {} cogs with {} commands".format(len(bot.cogs), len(bot.commands))
+            f"Loaded {len(bot.cogs)} cogs with {len(bot.commands)} commands"
         )
 
         if invite_url:
@@ -234,7 +234,7 @@ def init_events(bot, cli_flags):
                 await ctx.send(disabled_message.replace("{command}", ctx.invoked_with))
         elif isinstance(error, commands.CommandInvokeError):
             log.exception(
-                "Exception in command '{}'".format(ctx.command.qualified_name),
+                f"Exception in command '{ctx.command.qualified_name}'",
                 exc_info=error.original,
             )
 

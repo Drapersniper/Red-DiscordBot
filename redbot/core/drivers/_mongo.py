@@ -43,17 +43,17 @@ class MongoDriver(BaseDriver):
         password = storage_details["PASSWORD"]
         database = storage_details.get("DB_NAME", "default_db")
 
-        if port is 0:
+        if port == 0:
             ports = ""
         else:
-            ports = ":{}".format(port)
+            ports = f":{port}"
 
         if user is not None and password is not None:
             url = "{}://{}:{}@{}{}/{}".format(
                 uri, quote_plus(user), quote_plus(password), host, ports, database
             )
         else:
-            url = "{}://{}{}/{}".format(uri, host, ports, database)
+            url = f"{uri}://{host}{ports}/{database}"
 
         cls._conn = motor.motor_asyncio.AsyncIOMotorClient(url, retryWrites=True)
 
@@ -66,7 +66,7 @@ class MongoDriver(BaseDriver):
     def get_config_details():
         while True:
             uri = input("Enter URI scheme (mongodb or mongodb+srv): ")
-            if uri is "":
+            if uri == "":
                 uri = "mongodb"
 
             if uri in ["mongodb", "mongodb+srv"]:
@@ -75,7 +75,7 @@ class MongoDriver(BaseDriver):
                 print("Invalid URI scheme")
 
         host = input("Enter host address: ")
-        if uri is "mongodb":
+        if uri == "mongodb":
             port = int(input("Enter host port: "))
         else:
             port = 0

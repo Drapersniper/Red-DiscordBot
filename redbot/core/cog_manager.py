@@ -152,7 +152,7 @@ class CogManager:
         path = path.resolve()
 
         if not path.is_dir():
-            raise ValueError("'{}' is not a valid directory.".format(path))
+            raise ValueError(f"'{path}' is not a valid directory.")
 
         if path == await self.install_path():
             raise ValueError("Cannot add the install path as an additional path.")
@@ -249,7 +249,7 @@ class CogManager:
         RuntimeError
             When no matching spec can be found.
         """
-        real_name = ".{}".format(name)
+        real_name = f".{name}"
         package = "redbot.cogs"
 
         try:
@@ -257,7 +257,7 @@ class CogManager:
         except ImportError as e:
             if e.name == package + real_name:
                 raise NoSuchCog(
-                    "No core cog by the name of '{}' could be found.".format(name),
+                    f"No core cog by the name of '{name}' could be found.",
                     path=e.path,
                     name=e.name,
                 ) from e
@@ -336,7 +336,7 @@ class CogManagerUI(commands.Cog):
 
         partial = []
         for i, p in enumerate(cog_paths, start=1):
-            partial.append("{}. {}".format(i, p))
+            partial.append(f"{i}. {p}")
 
         msg += "\n".join(partial)
         await ctx.send(box(msg))

@@ -167,8 +167,8 @@ class Reports(commands.Cog):
         output = ""
         guilds = sorted(shared_guilds, key=lambda g: g.name)
         for i, guild in enumerate(guilds, 1):
-            output += "{}: {}\n".format(i, guild.name)
-        output += "\n{}".format(prompt)
+            output += f"{i}: {guild.name}\n"
+        output += f"\n{prompt}"
 
         for page in pagify(output, delims=["\n"]):
             await author.send(box(page))

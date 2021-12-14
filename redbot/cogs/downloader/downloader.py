@@ -1056,7 +1056,7 @@ class Downloader(commands.Cog):
     async def _cog_listpinned(self, ctx: commands.Context):
         """List currently pinned cogs."""
         installed = await self.installed_cogs()
-        pinned_list = sorted([cog.name for cog in installed if cog.pinned], key=str.lower)
+        pinned_list = sorted((cog.name for cog in installed if cog.pinned), key=str.lower)
         if pinned_list:
             message = humanize_list(pinned_list)
         else:
@@ -1304,7 +1304,7 @@ class Downloader(commands.Cog):
         all_installed_cogs = await self.installed_cogs()
         installed_cogs_in_repo = [cog for cog in all_installed_cogs if cog.repo_name == repo.name]
         installed_str = "\n".join(
-            "- {}{}".format(i.name, ": {}".format(i.short) if i.short else "")
+            "- {}{}".format(i.name, f": {i.short}" if i.short else "")
             for i in installed_cogs_in_repo
         )
 
@@ -1317,7 +1317,7 @@ class Downloader(commands.Cog):
             cog for cog in repo.available_cogs if not (cog.hidden or cog in installed_cogs_in_repo)
         ]
         available_str = "\n".join(
-            "+ {}{}".format(cog.name, ": {}".format(cog.short) if cog.short else "")
+            "+ {}{}".format(cog.name, f": {cog.short}" if cog.short else "")
             for cog in available_cogs
         )
 

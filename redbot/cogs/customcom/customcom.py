@@ -108,7 +108,7 @@ class CommandObj:
     def get_now() -> str:
         # Get current time as a string, for 'created_at' and 'edited_at' fields
         # in the ccinfo dict
-        return "{:%d/%m/%Y %H:%M:%S}".format(datetime.utcnow())
+        return f"{datetime.utcnow():%d/%m/%Y %H:%M:%S}"
 
     async def get(self, message: discord.Message, command: str) -> Tuple[str, Dict]:
         if not command:

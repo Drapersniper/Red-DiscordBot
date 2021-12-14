@@ -302,7 +302,7 @@ class PlaylistUtilities(MixinMeta, metaclass=CompositeMetaClass):
             abc_names[plist_idx_start:plist_idx_end]
         ).enumerate(start=plist_idx_start):
             item_idx = i + 1
-            plist += "`{}.` {}".format(item_idx, playlist_info)
+            plist += f"`{item_idx}.` {playlist_info}"
         if scope is None:
             embed = discord.Embed(
                 colour=await ctx.embed_colour(),

@@ -54,7 +54,7 @@ class APSWConnectionWrapper(apsw.Connection, ContextManagerMixin):
     Provides a few convenience methods, and allows a path object for construction
     """
 
-    def __init__(self, filename: Union[Path, str], *args, **kwargs):
+    def __init__(self, filename: Path | str, *args, **kwargs):
         super().__init__(str(filename), *args, **kwargs)
 
 

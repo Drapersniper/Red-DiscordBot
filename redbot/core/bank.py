@@ -286,13 +286,13 @@ async def can_spend(member: discord.Member, amount: int) -> bool:
 
     """
     if not isinstance(amount, int):
-        raise TypeError("Amount must be of type int, not {}.".format(type(amount)))
+        raise TypeError(f"Amount must be of type int, not {type(amount)}.")
     if _invalid_amount(amount):
         return False
     return await get_balance(member) >= amount
 
 
-async def set_balance(member: Union[discord.Member, discord.User], amount: int) -> int:
+async def set_balance(member: discord.Member | discord.User, amount: int) -> int:
     """Set an account balance.
 
     Parameters
@@ -320,7 +320,7 @@ async def set_balance(member: Union[discord.Member, discord.User], amount: int) 
 
     """
     if not isinstance(amount, int):
-        raise TypeError("Amount must be of type int, not {}.".format(type(amount)))
+        raise TypeError(f"Amount must be of type int, not {type(amount)}.")
     if amount < 0:
         raise ValueError("Not allowed to have negative balance.")
     guild = getattr(member, "guild", None)
@@ -375,7 +375,7 @@ async def withdraw_credits(member: discord.Member, amount: int) -> int:
 
     """
     if not isinstance(amount, int):
-        raise TypeError("Withdrawal amount must be of type int, not {}.".format(type(amount)))
+        raise TypeError(f"Withdrawal amount must be of type int, not {type(amount)}.")
     if _invalid_amount(amount):
         raise ValueError(
             "Invalid withdrawal amount {} < 0".format(
@@ -419,7 +419,7 @@ async def deposit_credits(member: discord.Member, amount: int) -> int:
 
     """
     if not isinstance(amount, int):
-        raise TypeError("Deposit amount must be of type int, not {}.".format(type(amount)))
+        raise TypeError(f"Deposit amount must be of type int, not {type(amount)}.")
     if _invalid_amount(amount):
         raise ValueError(
             "Invalid deposit amount {} <= 0".format(
@@ -432,8 +432,8 @@ async def deposit_credits(member: discord.Member, amount: int) -> int:
 
 
 async def transfer_credits(
-    from_: Union[discord.Member, discord.User],
-    to: Union[discord.Member, discord.User],
+    from_: discord.Member | discord.User,
+    to: discord.Member | discord.User,
     amount: int,
 ):
     """Transfer a given amount of credits from one account to another.
@@ -465,7 +465,7 @@ async def transfer_credits(
         ``bank._MAX_BALANCE``.
     """
     if not isinstance(amount, int):
-        raise TypeError("Transfer amount must be of type int, not {}.".format(type(amount)))
+        raise TypeError(f"Transfer amount must be of type int, not {type(amount)}.")
     if _invalid_amount(amount):
         raise ValueError(
             "Invalid transfer amount {} <= 0".format(
@@ -485,7 +485,7 @@ async def transfer_credits(
     return await deposit_credits(to, amount)
 
 
-async def wipe_bank(guild: Optional[discord.Guild] = None) -> None:
+async def wipe_bank(guild: discord.Guild | None = None) -> None:
     """Delete all accounts from the bank.
 
     Parameters
@@ -562,7 +562,7 @@ async def bank_prune(bot: Red, guild: discord.Guild = None, user_id: int = None)
                 del bank_data[user_id]
 
 
-async def get_leaderboard(positions: int = None, guild: discord.Guild = None) -> List[tuple]:
+async def get_leaderboard(positions: int = None, guild: discord.Guild = None) -> list[tuple]:
     """
     Gets the bank's leaderboard
 
@@ -604,8 +604,8 @@ async def get_leaderboard(positions: int = None, guild: discord.Guild = None) ->
 
 
 async def get_leaderboard_position(
-    member: Union[discord.User, discord.Member]
-) -> Union[int, None]:
+    member: discord.User | discord.Member
+) -> int | None:
     """
     Get the leaderboard position for the specified user
 
@@ -641,7 +641,7 @@ async def get_leaderboard_position(
             return pos[0]
 
 
-async def get_account(member: Union[discord.Member, discord.User]) -> Account:
+async def get_account(member: discord.Member | discord.User) -> Account:
     """Get the appropriate account for the given user or member.
 
     A member is required if the bank is currently guild specific.
@@ -917,7 +917,7 @@ async def set_max_balance(amount: int, guild: discord.Guild = None) -> int:
 
     """
     if not isinstance(amount, int):
-        raise TypeError("Amount must be of type int, not {}.".format(type(amount)))
+        raise TypeError(f"Amount must be of type int, not {type(amount)}.")
     if not (0 < amount <= _MAX_BALANCE):
         raise ValueError(
             "Amount must be greater than zero and less than {max}.".format(
@@ -995,7 +995,7 @@ async def set_default_balance(amount: int, guild: discord.Guild = None) -> int:
 
     """
     if not isinstance(amount, int):
-        raise TypeError("Amount must be of type int, not {}.".format(type(amount)))
+        raise TypeError(f"Amount must be of type int, not {type(amount)}.")
     max_bal = await get_max_balance(guild)
 
     if not (0 <= amount <= max_bal):

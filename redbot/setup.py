@@ -33,7 +33,7 @@ if not config_dir:
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
 except PermissionError:
-    print("You don't have permission to write to '{}'\nExiting...".format(config_dir))
+    print(f"You don't have permission to write to '{config_dir}'\nExiting...")
     sys.exit(1)
 config_file = config_dir / "config.json"
 
@@ -74,7 +74,7 @@ def get_data_dir(instance_name: str):
         " otherwise input your desired data location."
     )
     print()
-    print("Default: {}".format(data_path))
+    print(f"Default: {data_path}")
 
     data_path_input = input("> ")
 
@@ -101,7 +101,7 @@ def get_data_dir(instance_name: str):
             )
             sys.exit(1)
 
-    print("You have chosen {} to be your data directory.".format(data_path))
+    print(f"You have chosen {data_path} to be your data directory.")
     if not click.confirm("Please confirm", default=True):
         print("Please start the process over.")
         sys.exit(0)
@@ -286,7 +286,7 @@ async def remove_instance(
         safe_delete(data_path)
 
     save_config(instance, {}, remove=True)
-    print("The instance {} has been removed\n".format(instance))
+    print(f"The instance {instance} has been removed\n")
 
 
 async def remove_instance_interaction():
@@ -299,7 +299,7 @@ async def remove_instance_interaction():
         "is a list of instances that currently exist:\n"
     )
     for instance in instance_data.keys():
-        print("{}\n".format(instance))
+        print(f"{instance}\n")
     print("Please select one of the above by entering its name")
     selected = input("> ")
 

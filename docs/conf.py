@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # Red - Discord Bot documentation build configuration file, created by
 # sphinx-quickstart on Thu Aug 10 23:18:25 2017.
@@ -104,7 +103,7 @@ todo_include_todos = False
 default_role = "any"
 
 # Includes substitutions for all files
-with open("prolog.txt", "r") as file:
+with open("prolog.txt") as file:
     rst_prolog = file.read()
 
 # Adds d.py version to available substitutions in all files

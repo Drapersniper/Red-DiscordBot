@@ -14,15 +14,15 @@ from .utils import AsyncIter
 class PrefixManager:
     def __init__(self, config: Config, cli_flags: Namespace):
         self._config: Config = config
-        self._global_prefix_overide: Optional[List[str]] = (
+        self._global_prefix_overide: list[str] | None = (
             sorted(cli_flags.prefix, reverse=True) or None
         )
-        self._cached: Dict[Optional[int], List[str]] = {}
+        self._cached: dict[int | None, list[str]] = {}
 
-    async def get_prefixes(self, guild: Optional[discord.Guild] = None) -> List[str]:
-        ret: List[str]
+    async def get_prefixes(self, guild: discord.Guild | None = None) -> list[str]:
+        ret: list[str]
 
-        gid: Optional[int] = guild.id if guild else None
+        gid: int | None = guild.id if guild else None
 
         if gid in self._cached:
             ret = self._cached[gid].copy()
@@ -39,9 +39,9 @@ class PrefixManager:
         return ret
 
     async def set_prefixes(
-        self, guild: Optional[discord.Guild] = None, prefixes: Optional[List[str]] = None
+        self, guild: discord.Guild | None = None, prefixes: list[str] | None = None
     ):
-        gid: Optional[int] = guild.id if guild else None
+        gid: int | None = guild.id if guild else None
         prefixes = prefixes or []
         if not isinstance(prefixes, list) and not all(isinstance(pfx, str) for pfx in prefixes):
             raise TypeError("Prefixes must be a list of strings")
@@ -59,10 +59,10 @@ class PrefixManager:
 class I18nManager:
     def __init__(self, config: Config):
         self._config: Config = config
-        self._guild_locale: Dict[Union[int, None], Union[str, None]] = {}
-        self._guild_regional_format: Dict[Union[int, None], Union[str, None]] = {}
+        self._guild_locale: dict[int | None, str | None] = {}
+        self._guild_regional_format: dict[int | None, str | None] = {}
 
-    async def get_locale(self, guild: Union[discord.Guild, None]) -> str:
+    async def get_locale(self, guild: discord.Guild | None) -> str:
         """Get the guild locale from the cache"""
         # Ensure global locale is in the cache
         if None not in self._guild_locale:
@@ -91,11 +91,11 @@ class I18nManager:
         ...
 
     @overload
-    async def set_locale(self, guild: discord.Guild, locale: Union[str, None]):
+    async def set_locale(self, guild: discord.Guild, locale: str | None):
         ...
 
     async def set_locale(
-        self, guild: Union[discord.Guild, None], locale: Union[str, None]
+        self, guild: discord.Guild | None, locale: str | None
     ) -> None:
         """Set the locale in the config and cache"""
         if guild is None:
@@ -108,7 +108,7 @@ class I18nManager:
         self._guild_locale[guild.id] = locale
         await self._config.guild(guild).locale.set(locale)
 
-    async def get_regional_format(self, guild: Union[discord.Guild, None]) -> Optional[str]:
+    async def get_regional_format(self, guild: discord.Guild | None) -> str | None:
         """Get the regional format from the cache"""
         # Ensure global locale is in the cache
         if None not in self._guild_regional_format:
@@ -132,7 +132,7 @@ class I18nManager:
                 return out
 
     async def set_regional_format(
-        self, guild: Union[discord.Guild, None], regional_format: Union[str, None]
+        self, guild: discord.Guild | None, regional_format: str | None
     ) -> None:
         """Set the regional format in the config and cache"""
         if guild is None:
@@ -146,8 +146,8 @@ class I18nManager:
 class IgnoreManager:
     def __init__(self, config: Config):
         self._config: Config = config
-        self._cached_channels: Dict[int, bool] = {}
-        self._cached_guilds: Dict[int, bool] = {}
+        self._cached_channels: dict[int, bool] = {}
+        self._cached_guilds: dict[int, bool] = {}
 
     async def get_ignored_channel(
         self, channel: discord.TextChannel, check_category: bool = True
@@ -155,7 +155,7 @@ class IgnoreManager:
         ret: bool
 
         cid: int = channel.id
-        cat_id: Optional[int] = (
+        cat_id: int | None = (
             channel.category.id if check_category and channel.category else None
         )
         if cid in self._cached_channels:
@@ -176,7 +176,7 @@ class IgnoreManager:
         return ret
 
     async def set_ignored_channel(
-        self, channel: Union[discord.TextChannel, discord.CategoryChannel], set_to: bool
+        self, channel: discord.TextChannel | discord.CategoryChannel, set_to: bool
     ):
 
         cid: int = channel.id
@@ -212,8 +212,8 @@ class IgnoreManager:
 class WhitelistBlacklistManager:
     def __init__(self, config: Config):
         self._config: Config = config
-        self._cached_whitelist: Dict[Optional[int], Set[int]] = {}
-        self._cached_blacklist: Dict[Optional[int], Set[int]] = {}
+        self._cached_whitelist: dict[int | None, set[int]] = {}
+        self._cached_blacklist: dict[int | None, set[int]] = {}
         # because of discord deletion
         # we now have sync and async access that may need to happen at the
         # same time.
@@ -252,10 +252,10 @@ class WhitelistBlacklistManager:
                         except (ValueError, KeyError):
                             pass  # this is raw access not filled with defaults
 
-    async def get_whitelist(self, guild: Optional[discord.Guild] = None) -> Set[int]:
+    async def get_whitelist(self, guild: discord.Guild | None = None) -> set[int]:
         async with self._access_lock:
-            ret: Set[int]
-            gid: Optional[int] = guild.id if guild else None
+            ret: set[int]
+            gid: int | None = guild.id if guild else None
             if gid in self._cached_whitelist:
                 ret = self._cached_whitelist[gid].copy()
             else:
@@ -268,9 +268,9 @@ class WhitelistBlacklistManager:
 
             return ret
 
-    async def add_to_whitelist(self, guild: Optional[discord.Guild], role_or_user: Iterable[int]):
+    async def add_to_whitelist(self, guild: discord.Guild | None, role_or_user: Iterable[int]):
         async with self._access_lock:
-            gid: Optional[int] = guild.id if guild else None
+            gid: int | None = guild.id if guild else None
             role_or_user = role_or_user or []
             if not all(isinstance(r_or_u, int) for r_or_u in role_or_user):
                 raise TypeError("`role_or_user` must be an iterable of `int`s.")
@@ -291,9 +291,9 @@ class WhitelistBlacklistManager:
                     list(self._cached_whitelist[gid])
                 )
 
-    async def clear_whitelist(self, guild: Optional[discord.Guild] = None):
+    async def clear_whitelist(self, guild: discord.Guild | None = None):
         async with self._access_lock:
-            gid: Optional[int] = guild.id if guild else None
+            gid: int | None = guild.id if guild else None
             self._cached_whitelist[gid] = set()
             if gid is None:
                 await self._config.whitelist.clear()
@@ -301,10 +301,10 @@ class WhitelistBlacklistManager:
                 await self._config.guild_from_id(gid).whitelist.clear()
 
     async def remove_from_whitelist(
-        self, guild: Optional[discord.Guild], role_or_user: Iterable[int]
+        self, guild: discord.Guild | None, role_or_user: Iterable[int]
     ):
         async with self._access_lock:
-            gid: Optional[int] = guild.id if guild else None
+            gid: int | None = guild.id if guild else None
             role_or_user = role_or_user or []
             if not all(isinstance(r_or_u, int) for r_or_u in role_or_user):
                 raise TypeError("`role_or_user` must be an iterable of `int`s.")
@@ -325,10 +325,10 @@ class WhitelistBlacklistManager:
                     list(self._cached_whitelist[gid])
                 )
 
-    async def get_blacklist(self, guild: Optional[discord.Guild] = None) -> Set[int]:
+    async def get_blacklist(self, guild: discord.Guild | None = None) -> set[int]:
         async with self._access_lock:
-            ret: Set[int]
-            gid: Optional[int] = guild.id if guild else None
+            ret: set[int]
+            gid: int | None = guild.id if guild else None
             if gid in self._cached_blacklist:
                 ret = self._cached_blacklist[gid].copy()
             else:
@@ -341,9 +341,9 @@ class WhitelistBlacklistManager:
 
             return ret
 
-    async def add_to_blacklist(self, guild: Optional[discord.Guild], role_or_user: Iterable[int]):
+    async def add_to_blacklist(self, guild: discord.Guild | None, role_or_user: Iterable[int]):
         async with self._access_lock:
-            gid: Optional[int] = guild.id if guild else None
+            gid: int | None = guild.id if guild else None
             role_or_user = role_or_user or []
             if not all(isinstance(r_or_u, int) for r_or_u in role_or_user):
                 raise TypeError("`role_or_user` must be an iterable of `int`s.")
@@ -362,9 +362,9 @@ class WhitelistBlacklistManager:
                     list(self._cached_blacklist[gid])
                 )
 
-    async def clear_blacklist(self, guild: Optional[discord.Guild] = None):
+    async def clear_blacklist(self, guild: discord.Guild | None = None):
         async with self._access_lock:
-            gid: Optional[int] = guild.id if guild else None
+            gid: int | None = guild.id if guild else None
             self._cached_blacklist[gid] = set()
             if gid is None:
                 await self._config.blacklist.clear()
@@ -372,10 +372,10 @@ class WhitelistBlacklistManager:
                 await self._config.guild_from_id(gid).blacklist.clear()
 
     async def remove_from_blacklist(
-        self, guild: Optional[discord.Guild], role_or_user: Iterable[int]
+        self, guild: discord.Guild | None, role_or_user: Iterable[int]
     ):
         async with self._access_lock:
-            gid: Optional[int] = guild.id if guild else None
+            gid: int | None = guild.id if guild else None
             role_or_user = role_or_user or []
             if not all(isinstance(r_or_u, int) for r_or_u in role_or_user):
                 raise TypeError("`role_or_user` must be an iterable of `int`s.")
@@ -398,7 +398,7 @@ class WhitelistBlacklistManager:
 class DisabledCogCache:
     def __init__(self, config: Config):
         self._config = config
-        self._disable_map: Dict[str, Dict[int, bool]] = defaultdict(dict)
+        self._disable_map: dict[str, dict[int, bool]] = defaultdict(dict)
 
     async def cog_disabled_in_guild(self, cog_name: str, guild_id: int) -> bool:
         """

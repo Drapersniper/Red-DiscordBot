@@ -85,7 +85,7 @@ class MiscellaneousCommands(MixinMeta, metaclass=CompositeMetaClass):
             )
             em.set_footer(
                 text=_("Page {}/{}").format(
-                    humanize_number(pages), humanize_number((math.ceil(len(msg) / 1500)))
+                    humanize_number(pages), humanize_number(math.ceil(len(msg) / 1500))
                 )
             )
             pages += 1
@@ -114,7 +114,7 @@ class MiscellaneousCommands(MixinMeta, metaclass=CompositeMetaClass):
                 requesters["total"] += 1
 
         async for track in AsyncIter(queue_tracks):
-            req_username = "{}#{}".format(track.requester.name, track.requester.discriminator)
+            req_username = f"{track.requester.name}#{track.requester.discriminator}"
             await _usercount(req_username)
 
         try:
@@ -141,7 +141,7 @@ class MiscellaneousCommands(MixinMeta, metaclass=CompositeMetaClass):
             ],
             key=lambda x: x[1],
         )
-        queue_user = ["{}: {:g}%".format(x[0], x[1]) for x in top_queue_users]
+        queue_user = [f"{x[0]}: {x[1]:g}%" for x in top_queue_users]
         queue_user_list = "\n".join(queue_user)
         await self.send_embed_msg(
             ctx, title=_("Queued and playing tracks:"), description=queue_user_list

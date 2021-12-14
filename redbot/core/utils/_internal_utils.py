@@ -85,11 +85,11 @@ logging.getLogger().addFilter(_fuzzy_log_filter)
 
 async def fuzzy_command_search(
     ctx: Context,
-    term: Optional[str] = None,
+    term: str | None = None,
     *,
-    commands: Optional[Union[AsyncIterator[Command], Iterator[Command]]] = None,
+    commands: AsyncIterator[Command] | Iterator[Command] | None = None,
     min_score: int = 80,
-) -> Optional[List[Command]]:
+) -> list[Command] | None:
     """Search for commands which are similar in name to the one invoked.
 
     Returns a maximum of 5 commands which must all be at least matched
@@ -169,8 +169,8 @@ async def fuzzy_command_search(
 
 
 async def format_fuzzy_results(
-    ctx: Context, matched_commands: List[Command], *, embed: Optional[bool] = None
-) -> Union[str, discord.Embed]:
+    ctx: Context, matched_commands: list[Command], *, embed: bool | None = None
+) -> str | discord.Embed:
     """Format the result of a fuzzy command search.
 
     Parameters
@@ -208,7 +208,7 @@ async def format_fuzzy_results(
         return "Perhaps you wanted one of these? " + box("\n".join(lines), lang="vhdl")
 
 
-async def create_backup(dest: Path = Path.home()) -> Optional[Path]:
+async def create_backup(dest: Path = Path.home()) -> Path | None:
     data_path = Path(data_manager.core_data_path().parent)
     if not data_path.exists():
         return None
@@ -258,9 +258,9 @@ async def send_to_owners_with_preprocessor(
     bot: Red,
     content: str,
     *,
-    content_preprocessor: Optional[
+    content_preprocessor: None | (
         Callable[[Red, discord.abc.Messageable, str], Awaitable[str]]
-    ] = None,
+    ) = None,
     **kwargs,
 ):
     """
@@ -318,7 +318,7 @@ def expected_version(current: str, expected: str) -> bool:
     return current in pkg_resources.Requirement.parse(f"x{expected}")
 
 
-async def fetch_latest_red_version_info() -> Tuple[Optional[VersionInfo], Optional[str]]:
+async def fetch_latest_red_version_info() -> tuple[VersionInfo | None, str | None]:
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get("https://pypi.org/pypi/Red-DiscordBot/json") as r:

@@ -340,7 +340,7 @@ class KickBanMixin(MixinMeta):
                 await member.send(embed=em)
         try:
             await guild.kick(member, reason=audit_reason)
-            log.info("{}({}) kicked {}({})".format(author.name, author.id, member.name, member.id))
+            log.info(f"{author.name}({author.id}) kicked {member.name}({member.id})")
         except discord.errors.Forbidden:
             await ctx.send(_("I'm not allowed to do that."))
         except Exception:
@@ -545,7 +545,7 @@ class KickBanMixin(MixinMeta):
                 else:
                     try:
                         await guild.ban(user, reason=audit_reason, delete_message_days=days)
-                        log.info("{}({}) hackbanned {}".format(author.name, author.id, user_id))
+                        log.info(f"{author.name}({author.id}) hackbanned {user_id}")
                     except discord.NotFound:
                         errors[user_id] = _("User with ID {user_id} not found").format(
                             user_id=user_id

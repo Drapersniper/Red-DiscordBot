@@ -236,7 +236,7 @@ class FormattingUtilities(MixinMeta, metaclass=CompositeMetaClass):
             try:
                 query = Query.process_input(track.uri, self.local_folder_current_path)
                 if query.is_local:
-                    search_list += "`{0}.` **{1}**\n[{2}]\n".format(
+                    search_list += "`{}.` **{}**\n[{}]\n".format(
                         search_track_num,
                         discord.utils.escape_markdown(track.title),
                         discord.utils.escape_markdown(
@@ -244,7 +244,7 @@ class FormattingUtilities(MixinMeta, metaclass=CompositeMetaClass):
                         ),
                     )
                 else:
-                    search_list += "`{0}.` **[{1}]({2})**\n".format(
+                    search_list += "`{}.` **[{}]({})**\n".format(
                         search_track_num, discord.utils.escape_markdown(track.title), track.uri
                     )
             except AttributeError:

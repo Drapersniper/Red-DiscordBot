@@ -151,7 +151,7 @@ class Dev(commands.Cog):
             return
         except Exception as e:
             await ctx.send_interactive(
-                self.get_pages("{}: {!s}".format(type(e).__name__, e)), box_lang="py"
+                self.get_pages(f"{type(e).__name__}: {e!s}"), box_lang="py"
             )
             return
 
@@ -201,14 +201,14 @@ class Dev(commands.Cog):
             with redirect_stdout(stdout):
                 result = await func()
         except:
-            printed = "{}{}".format(stdout.getvalue(), traceback.format_exc())
+            printed = f"{stdout.getvalue()}{traceback.format_exc()}"
         else:
             printed = stdout.getvalue()
             await ctx.tick()
 
         if result is not None:
             self._last_result = result
-            msg = "{}{}".format(printed, result)
+            msg = f"{printed}{result}"
         else:
             msg = printed
         msg = self.sanitize_output(ctx, msg)
@@ -291,14 +291,14 @@ class Dev(commands.Cog):
                     result = await self.maybe_await(result)
             except:
                 value = stdout.getvalue()
-                msg = "{}{}".format(value, traceback.format_exc())
+                msg = f"{value}{traceback.format_exc()}"
             else:
                 value = stdout.getvalue()
                 if result is not None:
-                    msg = "{}{}".format(value, result)
+                    msg = f"{value}{result}"
                     env["_"] = result
                 elif value:
-                    msg = "{}".format(value)
+                    msg = f"{value}"
 
             msg = self.sanitize_output(ctx, msg)
 

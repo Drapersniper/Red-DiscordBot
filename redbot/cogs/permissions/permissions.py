@@ -249,7 +249,7 @@ class Permissions(commands.Cog):
 
         fake_message = copy(ctx.message)
         fake_message.author = user
-        fake_message.content = "{}{}".format(ctx.prefix, command)
+        fake_message.content = f"{ctx.prefix}{command}"
 
         com = ctx.bot.get_command(command)
         if com is None:

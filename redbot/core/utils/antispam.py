@@ -34,7 +34,7 @@ class AntiSpam:
         self.__event_timestamps = []
         _itvs = intervals if intervals else self.default_intervals
         self.__intervals = [AntiSpamInterval(*x) for x in _itvs]
-        self.__discard_after = max([x.period for x in self.__intervals])
+        self.__discard_after = max(x.period for x in self.__intervals)
 
     def __interval_check(self, interval: AntiSpamInterval):
         return (

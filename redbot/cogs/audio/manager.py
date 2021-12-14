@@ -263,7 +263,7 @@ class ServerManager:
             )
 
     def _has_java_error(self) -> bool:
-        poss_error_file = LAVALINK_DOWNLOAD_DIR / "hs_err_pid{}.log".format(self._proc.pid)
+        poss_error_file = LAVALINK_DOWNLOAD_DIR / f"hs_err_pid{self._proc.pid}.log"
         return poss_error_file.exists()
 
     async def shutdown(self) -> None:

@@ -53,7 +53,7 @@ class CacheLevel:
         return CacheLevel(other.value - self.value)
 
     def __str__(self):
-        return "{0:b}".format(self.value)
+        return f"{self.value:b}"
 
     def __format__(self, format_spec):
         return "{r:{f}}".format(r=self.value, f=format_spec)
@@ -209,7 +209,7 @@ class PlaylistScope(Enum):
     USER = "USERPLAYLIST"
 
     def __str__(self):
-        return "{0}".format(self.value)
+        return f"{self.value}"
 
     @staticmethod
     def list():

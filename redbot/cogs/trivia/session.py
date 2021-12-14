@@ -280,7 +280,7 @@ class TriviaSession:
         """Send a table of scores to the session's channel."""
         table = "+ Results: \n\n"
         for user, score in self.scores.most_common():
-            table += "+ {}\t{}\n".format(user, score)
+            table += f"+ {user}\t{score}\n"
         await self.ctx.send(box(table, lang="diff"))
 
     def stop(self):

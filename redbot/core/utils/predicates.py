@@ -56,8 +56,8 @@ class MessagePredicate(Callable[[discord.Message], bool]):
 
     """
 
-    def __init__(self, predicate: Callable[["MessagePredicate", discord.Message], bool]) -> None:
-        self._pred: Callable[["MessagePredicate", discord.Message], bool] = predicate
+    def __init__(self, predicate: Callable[[MessagePredicate, discord.Message], bool]) -> None:
+        self._pred: Callable[[MessagePredicate, discord.Message], bool] = predicate
         self.result = None
 
     def __call__(self, message: discord.Message) -> bool:
@@ -66,10 +66,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def same_context(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the message fits the described context.
 
         Parameters
@@ -103,10 +103,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def cancelled(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the message is ``[p]cancel``.
 
         Parameters
@@ -132,10 +132,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def yes_or_no(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the message is "yes"/"y" or "no"/"n".
 
         This will assign ``True`` for *yes*, or ``False`` for *no* to
@@ -175,10 +175,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def valid_int(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response is an integer.
 
         Assigns the response to `result` as an `int`.
@@ -215,10 +215,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def valid_float(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response is a float.
 
         Assigns the response to `result` as a `float`.
@@ -255,10 +255,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def positive(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response is a positive number.
 
         Assigns the response to `result` as a `float`.
@@ -299,10 +299,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def valid_role(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[discord.TextChannel] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response refers to a role in the current guild.
 
         Assigns the matching `discord.Role` object to `result`.
@@ -343,10 +343,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def valid_member(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[discord.TextChannel] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response refers to a member in the current guild.
 
         Assigns the matching `discord.Member` object to `result`.
@@ -391,10 +391,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def valid_text_channel(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[discord.TextChannel] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response refers to a text channel in the current guild.
 
         Assigns the matching `discord.TextChannel` object to `result`.
@@ -439,10 +439,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def has_role(
         cls,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[discord.TextChannel] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response refers to a role which the author has.
 
         Assigns the matching `discord.Role` object to `result`.
@@ -491,10 +491,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     def equal_to(
         cls,
         value: str,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response is equal to the specified value.
 
         Parameters
@@ -521,10 +521,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     def lower_equal_to(
         cls,
         value: str,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response *as lowercase* is equal to the specified value.
 
         Parameters
@@ -550,11 +550,11 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def less(
         cls,
-        value: Union[int, float],
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        value: int | float,
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response is less than the specified value.
 
         Parameters
@@ -581,11 +581,11 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def greater(
         cls,
-        value: Union[int, float],
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        value: int | float,
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response is greater than the specified value.
 
         Parameters
@@ -613,10 +613,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     def length_less(
         cls,
         length: int,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response's length is less than the specified length.
 
         Parameters
@@ -643,10 +643,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     def length_greater(
         cls,
         length: int,
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response's length is greater than the specified length.
 
         Parameters
@@ -673,10 +673,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     def contained_in(
         cls,
         collection: Sequence[str],
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response is contained in the specified collection.
 
         The index of the response in the ``collection`` sequence is
@@ -717,10 +717,10 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     def lower_contained_in(
         cls,
         collection: Sequence[str],
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Same as :meth:`contained_in`, but the response is set to lowercase before matching.
 
         Parameters
@@ -757,11 +757,11 @@ class MessagePredicate(Callable[[discord.Message], bool]):
     @classmethod
     def regex(
         cls,
-        pattern: Union[Pattern[str], str],
-        ctx: Optional[commands.Context] = None,
-        channel: Optional[Union[discord.TextChannel, discord.DMChannel]] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "MessagePredicate":
+        pattern: Pattern[str] | str,
+        ctx: commands.Context | None = None,
+        channel: discord.TextChannel | discord.DMChannel | None = None,
+        user: discord.abc.User | None = None,
+    ) -> MessagePredicate:
         """Match if the response matches the specified regex pattern.
 
         This predicate will use `re.search` to find a match. The
@@ -805,7 +805,7 @@ class MessagePredicate(Callable[[discord.Message], bool]):
         return cls(predicate)
 
     @staticmethod
-    def _find_role(guild: discord.Guild, argument: str) -> Optional[discord.Role]:
+    def _find_role(guild: discord.Guild, argument: str) -> discord.Role | None:
         match = _ID_RE.match(argument) or _ROLE_MENTION_RE.match(argument)
         if match:
             result = guild.get_role(int(match.group(1)))
@@ -873,13 +873,13 @@ class ReactionPredicate(Callable[[discord.Reaction, discord.abc.User], bool]):
 
     """
 
-    YES_OR_NO_EMOJIS: ClassVar[Tuple[str, str]] = (
+    YES_OR_NO_EMOJIS: ClassVar[tuple[str, str]] = (
         "\N{WHITE HEAVY CHECK MARK}",
         "\N{NEGATIVE SQUARED CROSS MARK}",
     )
     """Tuple[str, str] : A tuple containing the tick emoji and cross emoji, in that order."""
 
-    ALPHABET_EMOJIS: ClassVar[List[str]] = [
+    ALPHABET_EMOJIS: ClassVar[list[str]] = [
         chr(code)
         for code in range(
             ord("\N{REGIONAL INDICATOR SYMBOL LETTER A}"),
@@ -888,16 +888,16 @@ class ReactionPredicate(Callable[[discord.Reaction, discord.abc.User], bool]):
     ]
     """List[str] : A list of all 26 alphabetical letter emojis."""
 
-    NUMBER_EMOJIS: ClassVar[List[str]] = [
+    NUMBER_EMOJIS: ClassVar[list[str]] = [
         chr(code) + "\N{COMBINING ENCLOSING KEYCAP}" for code in range(ord("0"), ord("9") + 1)
     ]
     """List[str] : A list of all single-digit number emojis, 0 through 9."""
 
     def __init__(
-        self, predicate: Callable[["ReactionPredicate", discord.Reaction, discord.abc.User], bool]
+        self, predicate: Callable[[ReactionPredicate, discord.Reaction, discord.abc.User], bool]
     ) -> None:
         self._pred: Callable[
-            ["ReactionPredicate", discord.Reaction, discord.abc.User], bool
+            [ReactionPredicate, discord.Reaction, discord.abc.User], bool
         ] = predicate
         self.result = None
 
@@ -907,8 +907,8 @@ class ReactionPredicate(Callable[[discord.Reaction, discord.abc.User], bool]):
     # noinspection PyUnusedLocal
     @classmethod
     def same_context(
-        cls, message: Optional[discord.Message] = None, user: Optional[discord.abc.User] = None
-    ) -> "ReactionPredicate":
+        cls, message: discord.Message | None = None, user: discord.abc.User | None = None
+    ) -> ReactionPredicate:
         """Match if a reaction fits the described context.
 
         This will ignore reactions added by the bot user, regardless
@@ -940,10 +940,10 @@ class ReactionPredicate(Callable[[discord.Reaction, discord.abc.User], bool]):
     @classmethod
     def with_emojis(
         cls,
-        emojis: Sequence[Union[str, discord.Emoji, discord.PartialEmoji]],
-        message: Optional[discord.Message] = None,
-        user: Optional[discord.abc.User] = None,
-    ) -> "ReactionPredicate":
+        emojis: Sequence[str | discord.Emoji | discord.PartialEmoji],
+        message: discord.Message | None = None,
+        user: discord.abc.User | None = None,
+    ) -> ReactionPredicate:
         """Match if the reaction is one of the specified emojis.
 
         Parameters
@@ -978,8 +978,8 @@ class ReactionPredicate(Callable[[discord.Reaction, discord.abc.User], bool]):
 
     @classmethod
     def yes_or_no(
-        cls, message: Optional[discord.Message] = None, user: Optional[discord.abc.User] = None
-    ) -> "ReactionPredicate":
+        cls, message: discord.Message | None = None, user: discord.abc.User | None = None
+    ) -> ReactionPredicate:
         """Match if the reaction is a tick or cross emoji.
 
         The emojis used are in

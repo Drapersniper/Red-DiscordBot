@@ -124,12 +124,12 @@ if TYPE_CHECKING:
 PrefixCallable = Callable[[dpy_commands.bot.BotBase, discord.Message], List[str]]
 
 
-def when_mentioned(bot: dpy_commands.bot.BotBase, msg: discord.Message) -> List[str]:
+def when_mentioned(bot: dpy_commands.bot.BotBase, msg: discord.Message) -> list[str]:
     return [f"<@{bot.user.id}> ", f"<@!{bot.user.id}> "]
 
 
 def when_mentioned_or(*prefixes) -> PrefixCallable:
-    def inner(bot: dpy_commands.bot.BotBase, msg: discord.Message) -> List[str]:
+    def inner(bot: dpy_commands.bot.BotBase, msg: discord.Message) -> list[str]:
         r = list(prefixes)
         r = when_mentioned(bot, msg) + r
         return r

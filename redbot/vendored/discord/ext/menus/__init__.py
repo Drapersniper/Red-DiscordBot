@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 The MIT License (MIT)
 
@@ -905,7 +903,7 @@ class MenuPages(Menu):
         """
 
         if not isinstance(source, PageSource):
-            raise TypeError('Expected {0!r} not {1.__class__!r}.'.format(PageSource, source))
+            raise TypeError(f'Expected {PageSource!r} not {source.__class__!r}.')
 
         self._source = source
         self.current_page = 0
@@ -1115,11 +1113,11 @@ def _aiter(obj, *, _isasync=inspect.iscoroutinefunction):
     try:
         async_iter = cls.__aiter__
     except AttributeError:
-        raise TypeError('{0.__name__!r} object is not an async iterable'.format(cls))
+        raise TypeError(f'{cls.__name__!r} object is not an async iterable')
 
     async_iter = async_iter(obj)
     if _isasync(async_iter):
-        raise TypeError('{0.__name__!r} object is not an async iterable'.format(cls))
+        raise TypeError(f'{cls.__name__!r} object is not an async iterable')
     return async_iter
 
 class AsyncIteratorPageSource(PageSource):

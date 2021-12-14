@@ -50,7 +50,7 @@ class ConfigMeta(type):
         if key in _config_cache:
             return _config_cache[key]
 
-        instance = super(ConfigMeta, cls).__call__(
+        instance = super().__call__(
             cog_name, unique_identifier, driver, force_registration, defaults
         )
         _config_cache[key] = instance
@@ -351,7 +351,7 @@ class Group(Value):
                 config=self._config,
             )
         elif self.force_registration:
-            raise AttributeError("'{}' is not a valid registered Group or value.".format(item))
+            raise AttributeError(f"'{item}' is not a valid registered Group or value.")
         else:
             return Value(
                 identifier_data=new_identifiers,
@@ -773,7 +773,7 @@ class Config(metaclass=ConfigMeta):
         splitted = key.split("__")
         for i, k in enumerate(splitted, start=1):
             if not k.isidentifier():
-                raise RuntimeError("'{}' is an invalid config key.".format(k))
+                raise RuntimeError(f"'{k}' is an invalid config key.")
             if i == len(splitted):
                 partial[k] = value
             else:

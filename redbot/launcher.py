@@ -68,7 +68,7 @@ def parse_cli_args():
 def run_red(selected_instance, autorestart: bool = False, cliflags=None):
     interpreter = sys.executable
     while True:
-        print("Starting {}...".format(selected_instance))
+        print(f"Starting {selected_instance}...")
         cmd_list = [interpreter, "-m", "redbot", selected_instance]
         if cliflags:
             cmd_list += cliflags
@@ -87,7 +87,7 @@ def instance_menu():
 
     name_num_map = {}
     for name in list(instances.keys()):
-        print("{}. {}\n".format(counter + 1, name))
+        print(f"{counter + 1}. {name}\n")
         name_num_map[str(counter + 1)] = name
         counter += 1
 
@@ -126,7 +126,7 @@ def main_menu(flags_to_pass):
     clear_screen()
     while True:
         print(INTRO)
-        print("\033[4mCurrent version:\033[0m {}".format(__version__))
+        print(f"\033[4mCurrent version:\033[0m {__version__}")
         print("WARNING: The launcher is scheduled for removal at a later date.")
         print("")
         print("1. Run Red w/ autorestart in case of issues")

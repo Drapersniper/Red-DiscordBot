@@ -85,9 +85,9 @@ def get_audit_reason(author: discord.Member, reason: str = None, *, shorten: boo
 
     """
     audit_reason = (
-        "Action requested by {} (ID {}). Reason: {}".format(author, author.id, reason)
+        f"Action requested by {author} (ID {author.id}). Reason: {reason}"
         if reason
-        else "Action requested by {} (ID {}).".format(author, author.id)
+        else f"Action requested by {author} (ID {author.id})."
     )
     if shorten and len(audit_reason) > 512:
         audit_reason = f"{audit_reason[:509]}..."

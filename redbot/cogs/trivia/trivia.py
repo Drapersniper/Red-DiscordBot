@@ -237,7 +237,7 @@ class Trivia(commands.Cog):
     @triviaset_custom.command(name="list")
     async def custom_trivia_list(self, ctx: commands.Context):
         """List uploaded custom trivia."""
-        personal_lists = sorted([p.resolve().stem for p in cog_data_path(self).glob("*.yaml")])
+        personal_lists = sorted(p.resolve().stem for p in cog_data_path(self).glob("*.yaml"))
         no_lists_uploaded = _("No custom Trivia lists uploaded.")
 
         if not personal_lists:
@@ -383,7 +383,7 @@ class Trivia(commands.Cog):
     @trivia.command(name="list")
     async def trivia_list(self, ctx: commands.Context):
         """List available trivia categories."""
-        lists = set(p.stem for p in self._all_lists())
+        lists = {p.stem for p in self._all_lists()}
         if await ctx.embed_requested():
             await ctx.send(
                 embed=discord.Embed(
@@ -552,7 +552,7 @@ class Trivia(commands.Cog):
             _("Total Score"),
             _("Average Score"),
         )
-        lines = [" | ".join(headers), " | ".join(("-" * len(h) for h in headers))]
+        lines = [" | ".join(headers), " | ".join("-" * len(h) for h in headers)]
         # Header underlines
         for rank, tup in enumerate(items, 1):
             member, m_data = tup
@@ -634,7 +634,7 @@ class Trivia(commands.Cog):
         try:
             path = next(p for p in self._all_lists() if p.stem == category)
         except StopIteration:
-            raise FileNotFoundError("Could not find the `{}` category.".format(category))
+            raise FileNotFoundError(f"Could not find the `{category}` category.")
 
         return get_list(path)
 

@@ -47,9 +47,9 @@ class Context(DPYContext):
         The permission state the current context is in.
     """
 
-    command: "Command"
-    invoked_subcommand: "Optional[Command]"
-    bot: "Red"
+    command: Command
+    invoked_subcommand: Optional[Command]
+    bot: Red
 
     def __init__(self, **attrs):
         self.assume_yes = attrs.pop("assume_yes", False)
@@ -99,7 +99,7 @@ class Context(DPYContext):
         command = command or self.command
         await self.bot.send_help_for(self, command)
 
-    async def tick(self, *, message: Optional[str] = None) -> bool:
+    async def tick(self, *, message: str | None = None) -> bool:
         """Add a tick reaction to the command message.
 
         Keyword Arguments
@@ -117,9 +117,9 @@ class Context(DPYContext):
 
     async def react_quietly(
         self,
-        reaction: Union[discord.Emoji, discord.Reaction, discord.PartialEmoji, str],
+        reaction: discord.Emoji | discord.Reaction | discord.PartialEmoji | str,
         *,
-        message: Optional[str] = None,
+        message: str | None = None,
     ) -> bool:
         """Adds a reaction to the command message.
 
@@ -151,7 +151,7 @@ class Context(DPYContext):
 
     async def send_interactive(
         self, messages: Iterable[str], box_lang: str = None, timeout: int = 15
-    ) -> List[discord.Message]:
+    ) -> list[discord.Message]:
         """Send multiple messages interactively.
 
         The user will be prompted for whether or not they would like to view
@@ -291,7 +291,7 @@ class Context(DPYContext):
         return pattern.sub(f"@{me.display_name}".replace("\\", r"\\"), self.prefix)
 
     @property
-    def me(self) -> Union[discord.ClientUser, discord.Member]:
+    def me(self) -> discord.ClientUser | discord.Member:
         """
         discord.abc.User: The bot member or user object.
 

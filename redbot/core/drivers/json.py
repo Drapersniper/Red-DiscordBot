@@ -242,7 +242,7 @@ def _save_json(path: Path, data: Dict[str, Any]) -> None:
         https://www.mjmwired.net/kernel/Documentation/filesystems/ext4.txt#310
     """
     filename = path.stem
-    tmp_file = "{}-{}.tmp".format(filename, uuid4().fields[0])
+    tmp_file = f"{filename}-{uuid4().fields[0]}.tmp"
     tmp_path = path.parent / tmp_file
     with tmp_path.open(encoding="utf-8", mode="w") as fs:
         json.dump(data, fs)

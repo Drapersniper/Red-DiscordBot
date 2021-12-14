@@ -648,7 +648,7 @@ class RedHelpFormatter(HelpFormatterABC):
                 names.extend(list(v.name for v in v.values()))
 
             max_width = max(
-                discord.utils._string_width((name or _("No Category:"))) for name in names
+                discord.utils._string_width(name or _("No Category:")) for name in names
             )
 
             def width_maker(cmds):

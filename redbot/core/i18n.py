@@ -68,12 +68,12 @@ def get_regional_format() -> str:
     return str(_current_regional_format.get())
 
 
-def set_regional_format(regional_format: Optional[str]) -> None:
+def set_regional_format(regional_format: str | None) -> None:
     global _current_regional_format
     _current_regional_format = ContextVar("_current_regional_format", default=regional_format)
 
 
-def set_contextual_regional_format(regional_format: Optional[str]) -> None:
+def set_contextual_regional_format(regional_format: str | None) -> None:
     _current_regional_format.set(regional_format)
 
 
@@ -82,7 +82,7 @@ def reload_locales() -> None:
         translator.load_translations()
 
 
-async def get_locale_from_guild(bot: Red, guild: Optional[discord.Guild]) -> str:
+async def get_locale_from_guild(bot: Red, guild: discord.Guild | None) -> str:
     """
     Get locale set for the given guild.
 
@@ -102,7 +102,7 @@ async def get_locale_from_guild(bot: Red, guild: Optional[discord.Guild]) -> str
     return await bot._i18n_cache.get_locale(guild)
 
 
-async def get_regional_format_from_guild(bot: Red, guild: Optional[discord.Guild]) -> str:
+async def get_regional_format_from_guild(bot: Red, guild: discord.Guild | None) -> str:
     """
     Get regional format for the given guild.
 
@@ -122,7 +122,7 @@ async def get_regional_format_from_guild(bot: Red, guild: Optional[discord.Guild
     return await bot._i18n_cache.get_regional_format(guild)
 
 
-async def set_contextual_locales_from_guild(bot: Red, guild: Optional[discord.Guild]) -> None:
+async def set_contextual_locales_from_guild(bot: Red, guild: discord.Guild | None) -> None:
     """
     Set contextual locales (locale and regional format) for given guild context.
 
@@ -140,7 +140,7 @@ async def set_contextual_locales_from_guild(bot: Red, guild: Optional[discord.Gu
     set_contextual_regional_format(regional_format)
 
 
-def _parse(translation_file: io.TextIOWrapper) -> Dict[str, str]:
+def _parse(translation_file: io.TextIOWrapper) -> dict[str, str]:
     """
     Custom gettext parsing of translation files.
 
@@ -212,13 +212,13 @@ def get_locale_path(cog_folder: Path, extension: str) -> Path:
     :return:
         Path of possible localization file, it may not exist.
     """
-    return cog_folder / "locales" / "{}.{}".format(get_locale(), extension)
+    return cog_folder / "locales" / f"{get_locale()}.{extension}"
 
 
 class Translator(Callable[[str], str]):
     """Function to get translated strings at runtime."""
 
-    def __init__(self, name: str, file_location: Union[str, Path, os.PathLike]):
+    def __init__(self, name: str, file_location: str | Path | os.PathLike):
         """
         Initializes an internationalization object.
 
@@ -280,7 +280,7 @@ class Translator(Callable[[str], str]):
             self.translations[untranslated] = translated
 
 
-@functools.lru_cache()
+@functools.lru_cache
 def _get_babel_locale(red_locale: str) -> babel.core.Locale:
     supported_locales = babel.localedata.locale_identifiers()
     try:  # Handles cases where red_locale is already Babel supported
@@ -300,7 +300,7 @@ def _get_babel_locale(red_locale: str) -> babel.core.Locale:
     return babel_locale
 
 
-def get_babel_locale(locale: Optional[str] = None) -> babel.core.Locale:
+def get_babel_locale(locale: str | None = None) -> babel.core.Locale:
     """Function to convert a locale to a `babel.core.Locale`.
 
     Parameters
@@ -318,7 +318,7 @@ def get_babel_locale(locale: Optional[str] = None) -> babel.core.Locale:
     return _get_babel_locale(locale)
 
 
-def get_babel_regional_format(regional_format: Optional[str] = None) -> babel.core.Locale:
+def get_babel_regional_format(regional_format: str | None = None) -> babel.core.Locale:
     """Function to convert a regional format to a `babel.core.Locale`.
 
     If ``regional_format`` parameter is passed, this behaves the same as `get_babel_locale`.

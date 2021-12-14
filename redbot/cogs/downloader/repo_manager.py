@@ -58,8 +58,8 @@ class _RepoCheckoutCtxManager(
     def __init__(
         self,
         repo: Repo,
-        rev: Optional[str],
-        exit_to_rev: Optional[str] = None,
+        rev: str | None,
+        exit_to_rev: str | None = None,
         force_checkout: bool = False,
     ):
         self.repo = repo
@@ -138,10 +138,10 @@ class Repo(RepoJSONMixin):
         self,
         name: str,
         url: str,
-        branch: Optional[str],
+        branch: str | None,
         commit: str,
         folder_path: Path,
-        available_modules: Tuple[Installable, ...] = (),
+        available_modules: tuple[Installable, ...] = (),
     ):
         self.url = url
         self.branch = branch
@@ -184,7 +184,7 @@ class Repo(RepoJSONMixin):
             )
         return poss_repo
 
-    def _existing_git_repo(self) -> Tuple[bool, Path]:
+    def _existing_git_repo(self) -> tuple[bool, Path]:
         git_path = self.folder_path / ".git"
         return git_path.exists(), git_path
 
@@ -248,8 +248,8 @@ class Repo(RepoJSONMixin):
         return await self.latest_commit() == self.commit
 
     async def _get_file_update_statuses(
-        self, old_rev: str, new_rev: Optional[str] = None
-    ) -> Dict[str, str]:
+        self, old_rev: str, new_rev: str | None = None
+    ) -> dict[str, str]:
         """
         Gets the file update status letters for each changed file between the two revisions.
 
@@ -288,8 +288,8 @@ class Repo(RepoJSONMixin):
         return ret
 
     async def get_last_module_occurrence(
-        self, module_name: str, descendant_rev: Optional[str] = None
-    ) -> Optional[Installable]:
+        self, module_name: str, descendant_rev: str | None = None
+    ) -> Installable | None:
         """
         Gets module's `Installable` from last commit in which it still occurs.
 
@@ -371,8 +371,8 @@ class Repo(RepoJSONMixin):
         return False
 
     async def get_modified_modules(
-        self, old_rev: str, new_rev: Optional[str] = None
-    ) -> Tuple[Installable, ...]:
+        self, old_rev: str, new_rev: str | None = None
+    ) -> tuple[Installable, ...]:
         """
         Gets modified modules between the two revisions.
         For every module that doesn't exist in :code:`new_rev`,
@@ -499,7 +499,7 @@ class Repo(RepoJSONMixin):
 
         return p.stdout.decode(**DECODE_PARAMS).strip()
 
-    def _update_available_modules(self) -> Tuple[Installable, ...]:
+    def _update_available_modules(self) -> tuple[Installable, ...]:
         """
         Updates the available modules attribute for this repo.
         :return: List of available modules.
@@ -531,7 +531,7 @@ class Repo(RepoJSONMixin):
     async def _run(
         self,
         *args: Any,
-        valid_exit_codes: Tuple[int, ...] = (0,),
+        valid_exit_codes: tuple[int, ...] = (0,),
         debug_only: bool = False,
         **kwargs: Any,
     ) -> CompletedProcess:
@@ -575,7 +575,7 @@ class Repo(RepoJSONMixin):
         self._read_info_file()
         self._update_available_modules()
 
-    async def _checkout(self, rev: Optional[str] = None, force_checkout: bool = False) -> None:
+    async def _checkout(self, rev: str | None = None, force_checkout: bool = False) -> None:
         if rev is None:
             return
         if not force_checkout and self.commit == rev:
@@ -596,9 +596,9 @@ class Repo(RepoJSONMixin):
 
     def checkout(
         self,
-        rev: Optional[str] = None,
+        rev: str | None = None,
         *,
-        exit_to_rev: Optional[str] = None,
+        exit_to_rev: str | None = None,
         force_checkout: bool = False,
     ) -> _RepoCheckoutCtxManager:
         """
@@ -633,7 +633,7 @@ class Repo(RepoJSONMixin):
 
         return _RepoCheckoutCtxManager(self, rev, exit_to_rev, force_checkout)
 
-    async def clone(self) -> Tuple[Installable, ...]:
+    async def clone(self) -> tuple[Installable, ...]:
         """Clone a new repo.
 
         Returns
@@ -712,7 +712,7 @@ class Repo(RepoJSONMixin):
 
         return p.stdout.decode(**DECODE_PARAMS).strip()
 
-    async def latest_commit(self, branch: Optional[str] = None) -> str:
+    async def latest_commit(self, branch: str | None = None) -> str:
         """Determine the latest commit hash of the repo.
 
         Parameters
@@ -743,7 +743,7 @@ class Repo(RepoJSONMixin):
 
         return p.stdout.decode(**DECODE_PARAMS).strip()
 
-    async def current_url(self, folder: Optional[Path] = None) -> str:
+    async def current_url(self, folder: Path | None = None) -> str:
         """
         Discovers the FETCH URL for a Git repo.
 
@@ -774,7 +774,7 @@ class Repo(RepoJSONMixin):
 
         return p.stdout.decode(**DECODE_PARAMS).strip()
 
-    async def hard_reset(self, branch: Optional[str] = None) -> None:
+    async def hard_reset(self, branch: str | None = None) -> None:
         """Perform a hard reset on the current repo.
 
         Parameters
@@ -803,7 +803,7 @@ class Repo(RepoJSONMixin):
                 git_command,
             )
 
-    async def update(self) -> Tuple[str, str]:
+    async def update(self) -> tuple[str, str]:
         """Update the current branch of this repo.
 
         Returns
@@ -870,7 +870,7 @@ class Repo(RepoJSONMixin):
 
     async def install_libraries(
         self, target_dir: Path, req_target_dir: Path, libraries: Iterable[Installable] = ()
-    ) -> Tuple[Tuple[InstalledModule, ...], Tuple[Installable, ...]]:
+    ) -> tuple[tuple[InstalledModule, ...], tuple[Installable, ...]]:
         """Install shared libraries to the target directory.
 
         If :code:`libraries` is not specified, all shared libraries in the repo
@@ -976,24 +976,24 @@ class Repo(RepoJSONMixin):
         return True
 
     @property
-    def available_cogs(self) -> Tuple[Installable, ...]:
+    def available_cogs(self) -> tuple[Installable, ...]:
         """`tuple` of `installable` : All available cogs in this Repo.
 
         This excludes hidden or shared packages.
         """
         # noinspection PyTypeChecker
         return tuple(
-            [m for m in self.available_modules if m.type == InstallableType.COG and not m.disabled]
+            m for m in self.available_modules if m.type == InstallableType.COG and not m.disabled
         )
 
     @property
-    def available_libraries(self) -> Tuple[Installable, ...]:
+    def available_libraries(self) -> tuple[Installable, ...]:
         """`tuple` of `installable` : All available shared libraries in this
         Repo.
         """
         # noinspection PyTypeChecker
         return tuple(
-            [m for m in self.available_modules if m.type == InstallableType.SHARED_LIBRARY]
+            m for m in self.available_modules if m.type == InstallableType.SHARED_LIBRARY
         )
 
     @classmethod
@@ -1014,7 +1014,7 @@ class RepoManager:
     TREE_URL_RE = re.compile(r"(?P<tree>/tree)/(?P<branch>\S+)$")
 
     def __init__(self) -> None:
-        self._repos: Dict[str, Repo] = {}
+        self._repos: dict[str, Repo] = {}
         self.config = Config.get_conf(self, identifier=170708480, force_registration=True)
         self.config.register_global(repos={})
 
@@ -1035,7 +1035,7 @@ class RepoManager:
             raise errors.InvalidRepoName("Not a valid Python variable name.")
         return name.lower()
 
-    async def add_repo(self, url: str, name: str, branch: Optional[str] = None) -> Repo:
+    async def add_repo(self, url: str, name: str, branch: str | None = None) -> Repo:
         """Add and clone a git repository.
 
         Parameters
@@ -1071,7 +1071,7 @@ class RepoManager:
 
         return r
 
-    def get_repo(self, name: str) -> Optional[Repo]:
+    def get_repo(self, name: str) -> Repo | None:
         """Get a Repo object for a repository.
 
         Parameters
@@ -1088,10 +1088,10 @@ class RepoManager:
         return self._repos.get(name, None)
 
     @property
-    def repos(self) -> Tuple[Repo, ...]:
+    def repos(self) -> tuple[Repo, ...]:
         return tuple(self._repos.values())
 
-    def get_all_repo_names(self) -> Tuple[str, ...]:
+    def get_all_repo_names(self) -> tuple[str, ...]:
         """Get all repo names.
 
         Returns
@@ -1102,7 +1102,7 @@ class RepoManager:
         # noinspection PyTypeChecker
         return tuple(self._repos.keys())
 
-    def get_all_cogs(self) -> Tuple[Installable, ...]:
+    def get_all_cogs(self) -> tuple[Installable, ...]:
         """Get all cogs.
 
         Returns
@@ -1110,7 +1110,7 @@ class RepoManager:
         `tuple` of `Installable`
 
         """
-        all_cogs: List[Installable] = []
+        all_cogs: list[Installable] = []
         for repo in self._repos.values():
             all_cogs += repo.available_cogs
         return tuple(all_cogs)
@@ -1141,7 +1141,7 @@ class RepoManager:
         except KeyError:
             pass
 
-    async def update_repo(self, repo_name: str) -> Tuple[Repo, Tuple[str, str]]:
+    async def update_repo(self, repo_name: str) -> tuple[Repo, tuple[str, str]]:
         """Update repo with provided name.
 
         Parameters
@@ -1160,8 +1160,8 @@ class RepoManager:
         return (repo, (old, new))
 
     async def update_repos(
-        self, repos: Optional[Iterable[Repo]] = None
-    ) -> Tuple[Dict[Repo, Tuple[str, str]], List[str]]:
+        self, repos: Iterable[Repo] | None = None
+    ) -> tuple[dict[Repo, tuple[str, str]], list[str]]:
         """Calls `Repo.update` on passed repositories and
         catches failing ones.
 
@@ -1207,7 +1207,7 @@ class RepoManager:
 
         return ret, failed
 
-    async def _load_repos(self, set_repos: bool = False) -> Dict[str, Repo]:
+    async def _load_repos(self, set_repos: bool = False) -> dict[str, Repo]:
         ret = {}
         self.repos_folder.mkdir(parents=True, exist_ok=True)
         for folder in self.repos_folder.iterdir():
@@ -1232,7 +1232,7 @@ class RepoManager:
             self._repos = ret
         return ret
 
-    def _parse_url(self, url: str, branch: Optional[str]) -> Tuple[str, Optional[str]]:
+    def _parse_url(self, url: str, branch: str | None) -> tuple[str, str | None]:
         if self.GITHUB_OR_GITLAB_RE.match(url):
             tree_url_match = self.TREE_URL_RE.search(url)
             if tree_url_match:

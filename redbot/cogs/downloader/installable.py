@@ -68,7 +68,7 @@ class Installable(RepoJSONMixin):
 
     """
 
-    def __init__(self, location: Path, repo: Optional[Repo] = None, commit: str = ""):
+    def __init__(self, location: Path, repo: Repo | None = None, commit: str = ""):
         """Base installable initializer.
 
         Parameters
@@ -90,12 +90,12 @@ class Installable(RepoJSONMixin):
         self.end_user_data_statement: str
         self.min_bot_version: VersionInfo
         self.max_bot_version: VersionInfo
-        self.min_python_version: Tuple[int, int, int]
+        self.min_python_version: tuple[int, int, int]
         self.hidden: bool
         self.disabled: bool
-        self.required_cogs: Dict[str, str]  # Cog name -> repo URL
-        self.requirements: Tuple[str, ...]
-        self.tags: Tuple[str, ...]
+        self.required_cogs: dict[str, str]  # Cog name -> repo URL
+        self.requirements: tuple[str, ...]
+        self.tags: tuple[str, ...]
         self.type: InstallableType
 
         super().__init__(location)
@@ -157,7 +157,7 @@ class InstalledModule(Installable):
     def __init__(
         self,
         location: Path,
-        repo: Optional[Repo] = None,
+        repo: Repo | None = None,
         commit: str = "",
         pinned: bool = False,
         json_repo_name: str = "",
@@ -167,8 +167,8 @@ class InstalledModule(Installable):
         # this is here so that Downloader could use real repo name instead of "MISSING_REPO"
         self._json_repo_name = json_repo_name
 
-    def to_json(self) -> Dict[str, Union[str, bool]]:
-        module_json: Dict[str, Union[str, bool]] = {
+    def to_json(self) -> dict[str, str | bool]:
+        module_json: dict[str, str | bool] = {
             "repo_name": self.repo_name,
             "module_name": self.name,
             "commit": self.commit,
@@ -179,7 +179,7 @@ class InstalledModule(Installable):
 
     @classmethod
     def from_json(
-        cls, data: Dict[str, Union[str, bool]], repo_mgr: RepoManager
+        cls, data: dict[str, str | bool], repo_mgr: RepoManager
     ) -> InstalledModule:
         repo_name = cast(str, data["repo_name"])
         cog_name = cast(str, data["module_name"])

@@ -28,7 +28,7 @@ _ = Translator("IssueDiagnoser", __file__)
 class CheckResult:
     success: bool
     label: str
-    details: Union[List[CheckResult], str] = ""
+    details: list[CheckResult] | str = ""
     resolution: str = ""
 
 
@@ -73,7 +73,7 @@ class IssueDiagnoserBase:
         label: str,
         checks: Iterable[Callable[[], Awaitable[CheckResult]]],
         *,
-        final_check_result: Optional[CheckResult] = None,
+        final_check_result: CheckResult | None = None,
     ) -> CheckResult:
         details = []
         for check in checks:
@@ -91,7 +91,7 @@ class IssueDiagnoserBase:
             )
         return CheckResult(True, label, details)
 
-    def _format_command_name(self, command: Union[commands.Command, str]) -> str:
+    def _format_command_name(self, command: commands.Command | str) -> str:
         if not isinstance(command, str):
             command = command.qualified_name
         return inline(f"{self._original_ctx.clean_prefix}{command}")
@@ -890,7 +890,7 @@ class RootDiagnosersMixin(
 class IssueDiagnoser(RootDiagnosersMixin, IssueDiagnoserBase):
     def _get_message_from_check_result(
         self, result: CheckResult, *, prefix: str = ""
-    ) -> List[str]:
+    ) -> list[str]:
         lines = []
         if not result.details:
             return []

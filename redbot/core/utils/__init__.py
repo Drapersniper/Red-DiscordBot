@@ -58,11 +58,11 @@ class AsyncFilter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=du
 
     def __init__(
         self,
-        func: Callable[[_T], Union[bool, Awaitable[bool]]],
-        iterable: Union[AsyncIterable[_T], Iterable[_T]],
+        func: Callable[[_T], bool | Awaitable[bool]],
+        iterable: AsyncIterable[_T] | Iterable[_T],
     ) -> None:
-        self.__func: Callable[[_T], Union[bool, Awaitable[bool]]] = func
-        self.__iterable: Union[AsyncIterable[_T], Iterable[_T]] = iterable
+        self.__func: Callable[[_T], bool | Awaitable[bool]] = func
+        self.__iterable: AsyncIterable[_T] | Iterable[_T] = iterable
 
         # We assign the generator strategy based on the arguments' types
         if isinstance(iterable, AsyncIterable):
@@ -90,7 +90,7 @@ class AsyncFilter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=du
             if await self.__func(item):
                 yield item
 
-    async def __flatten(self) -> List[_T]:
+    async def __flatten(self) -> list[_T]:
         return [item async for item in self]
 
     def __aiter__(self):
@@ -106,8 +106,8 @@ class AsyncFilter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=du
 
 
 def async_filter(
-    func: Callable[[_T], Union[bool, Awaitable[bool]]],
-    iterable: Union[AsyncIterable[_T], Iterable[_T]],
+    func: Callable[[_T], bool | Awaitable[bool]],
+    iterable: AsyncIterable[_T] | Iterable[_T],
 ) -> AsyncFilter[_T]:
     """Filter an (optionally async) iterable with an (optionally async) predicate.
 
@@ -138,7 +138,7 @@ def async_filter(
 
 async def async_enumerate(
     async_iterable: AsyncIterable[_T], start: int = 0
-) -> AsyncIterator[Tuple[int, _T]]:
+) -> AsyncIterator[tuple[int, _T]]:
     """Async iterable version of `enumerate`.
 
     Parameters
@@ -165,7 +165,7 @@ async def _sem_wrapper(sem, task):
 
 
 def bounded_gather_iter(
-    *coros_or_futures, limit: int = 4, semaphore: Optional[Semaphore] = None
+    *coros_or_futures, limit: int = 4, semaphore: Semaphore | None = None
 ) -> Iterator[Awaitable[Any]]:
     """
     An iterator that returns tasks as they are ready, but limits the
@@ -211,8 +211,8 @@ def bounded_gather(
     *coros_or_futures,
     return_exceptions: bool = False,
     limit: int = 4,
-    semaphore: Optional[Semaphore] = None,
-) -> Awaitable[List[Any]]:
+    semaphore: Semaphore | None = None,
+) -> Awaitable[list[Any]]:
     """
     A semaphore-bounded wrapper to :meth:`asyncio.gather`.
 
@@ -277,7 +277,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
     """
 
     def __init__(
-        self, iterable: Iterable[_T], delay: Union[float, int] = 0, steps: int = 1
+        self, iterable: Iterable[_T], delay: float | int = 0, steps: int = 1
     ) -> None:
         if steps < 1:
             raise ValueError("Steps must be higher than or equals to 1")
@@ -301,7 +301,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
         self._i += 1
         return await maybe_coroutine(self._map, item) if self._map is not None else item
 
-    def __await__(self) -> Generator[Any, None, List[_T]]:
+    def __await__(self) -> Generator[Any, None, list[_T]]:
         """Returns a list of the iterable.
 
         Examples
@@ -345,7 +345,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
             value = default
         return value
 
-    async def flatten(self) -> List[_T]:
+    async def flatten(self) -> list[_T]:
         """Returns a list of the iterable.
 
         Examples
@@ -358,7 +358,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
         """
         return [item async for item in self]
 
-    def filter(self, function: Callable[[_T], Union[bool, Awaitable[bool]]]) -> AsyncFilter[_T]:
+    def filter(self, function: Callable[[_T], bool | Awaitable[bool]]) -> AsyncFilter[_T]:
         """Filter the iterable with an (optionally async) predicate.
 
         Parameters
@@ -394,7 +394,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
         """
         return async_filter(function, self)
 
-    def enumerate(self, start: int = 0) -> AsyncIterator[Tuple[int, _T]]:
+    def enumerate(self, start: int = 0) -> AsyncIterator[tuple[int, _T]]:
         """Async iterable version of `enumerate`.
 
         Parameters
@@ -446,8 +446,8 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
     async def find(
         self,
-        predicate: Callable[[_T], Union[bool, Awaitable[bool]]],
-        default: Optional[Any] = None,
+        predicate: Callable[[_T], bool | Awaitable[bool]],
+        default: Any | None = None,
     ) -> AsyncIterator[_T]:
         """Calls ``predicate`` over items in iterable and return first value to match.
 
@@ -478,7 +478,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
             if ret:
                 return elem
 
-    def map(self, func: Callable[[_T], Union[_S, Awaitable[_S]]]) -> AsyncIter[_S]:
+    def map(self, func: Callable[[_T], _S | Awaitable[_S]]) -> AsyncIter[_S]:
         """Set the mapping callable for this instance of `AsyncIter`.
 
         .. important::
@@ -511,7 +511,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
         return self
 
 
-def get_end_user_data_statement(file: Union[Path, str]) -> Optional[str]:
+def get_end_user_data_statement(file: Path | str) -> str | None:
     """
     This function attempts to get the ``end_user_data_statement`` key from cog's ``info.json``.
     This will log the reason if ``None`` is returned.
@@ -558,7 +558,7 @@ def get_end_user_data_statement(file: Union[Path, str]) -> Optional[str]:
     return None
 
 
-def get_end_user_data_statement_or_raise(file: Union[Path, str]) -> str:
+def get_end_user_data_statement_or_raise(file: Path | str) -> str:
     """
     This function attempts to get the ``end_user_data_statement`` key from cog's ``info.json``.
 

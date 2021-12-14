@@ -108,7 +108,7 @@ class PlayerControllerCommands(MixinMeta, metaclass=CompositeMetaClass):
                 or ""
             )
             song += _("\n Requested by: **{track.requester}**").format(track=player.current)
-            song += "\n\n{arrow}`{pos}`/`{dur}`".format(arrow=arrow, pos=pos, dur=dur)
+            song += f"\n\n{arrow}`{pos}`/`{dur}`"
         else:
             song = _("Nothing.")
 

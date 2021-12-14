@@ -41,8 +41,8 @@ __all__ = [
     "reset_cases",
 ]
 
-_config: Optional[Config] = None
-_bot_ref: Optional[Red] = None
+_config: Config | None = None
+_bot_ref: Red | None = None
 
 _CASETYPES = "CASETYPES"
 _CASES = "CASES"
@@ -306,16 +306,16 @@ class Case:
         guild: discord.Guild,
         created_at: int,
         action_type: str,
-        user: Union[discord.Object, discord.abc.User, int],
-        moderator: Optional[Union[discord.Object, discord.abc.User, int]],
+        user: discord.Object | discord.abc.User | int,
+        moderator: discord.Object | discord.abc.User | int | None,
         case_number: int,
-        reason: Optional[str] = None,
-        until: Optional[int] = None,
-        channel: Optional[Union[discord.abc.GuildChannel, int]] = None,
-        amended_by: Optional[Union[discord.Object, discord.abc.User, int]] = None,
-        modified_at: Optional[float] = None,
-        message: Optional[Union[discord.PartialMessage, discord.Message]] = None,
-        last_known_username: Optional[str] = None,
+        reason: str | None = None,
+        until: int | None = None,
+        channel: discord.abc.GuildChannel | int | None = None,
+        amended_by: discord.Object | discord.abc.User | int | None = None,
+        modified_at: float | None = None,
+        message: discord.PartialMessage | discord.Message | None = None,
+        last_known_username: str | None = None,
     ):
         self.bot = bot
         self.guild = guild
@@ -524,10 +524,10 @@ class Case:
                     )
             user = filter_mass_mentions(filter_urls(user))  # Further sanitization outside embeds
             case_text = ""
-            case_text += "{}\n".format(title)
+            case_text += f"{title}\n"
             case_text += _("**User:** {}\n").format(user)
             case_text += _("**Moderator:** {}\n").format(moderator)
-            case_text += "{}\n".format(reason)
+            case_text += f"{reason}\n"
             if until and duration:
                 case_text += _("**Until:** {}\n**Duration:** {}\n").format(until, duration)
             if self.channel:
@@ -675,7 +675,7 @@ class CaseType:
         default_setting: bool,
         image: str,
         case_str: str,
-        guild: Optional[discord.Guild] = None,
+        guild: discord.Guild | None = None,
         **kwargs,
     ):
         self.name = name
@@ -783,12 +783,12 @@ async def get_case(case_number: int, guild: discord.Guild, bot: Red) -> Case:
 
     case = await _config.custom(_CASES, str(guild.id), str(case_number)).all()
     if not case:
-        raise RuntimeError("That case does not exist for guild {}".format(guild.name))
+        raise RuntimeError(f"That case does not exist for guild {guild.name}")
     mod_channel = await get_modlog_channel(guild)
     return await Case.from_json(mod_channel, bot, case_number, case)
 
 
-async def get_latest_case(guild: discord.Guild, bot: Red) -> Optional[Case]:
+async def get_latest_case(guild: discord.Guild, bot: Red) -> Case | None:
     """Get the latest case for the specified guild.
 
     Parameters
@@ -809,7 +809,7 @@ async def get_latest_case(guild: discord.Guild, bot: Red) -> Optional[Case]:
         return await get_case(case_number, guild, bot)
 
 
-async def get_all_cases(guild: discord.Guild, bot: Red) -> List[Case]:
+async def get_all_cases(guild: discord.Guild, bot: Red) -> list[Case]:
     """
     Gets all cases for the specified guild
 
@@ -836,7 +836,7 @@ async def get_all_cases(guild: discord.Guild, bot: Red) -> List[Case]:
 
 async def get_cases_for_member(
     guild: discord.Guild, bot: Red, *, member: discord.Member = None, member_id: int = None
-) -> List[Case]:
+) -> list[Case]:
     """
     Gets all cases for the specified member or member id in a guild.
 
@@ -896,13 +896,13 @@ async def create_case(
     guild: discord.Guild,
     created_at: datetime,
     action_type: str,
-    user: Union[discord.Object, discord.abc.User, int],
-    moderator: Optional[Union[discord.Object, discord.abc.User, int]] = None,
-    reason: Optional[str] = None,
-    until: Optional[datetime] = None,
-    channel: Optional[discord.abc.GuildChannel] = None,
-    last_known_username: Optional[str] = None,
-) -> Optional[Case]:
+    user: discord.Object | discord.abc.User | int,
+    moderator: discord.Object | discord.abc.User | int | None = None,
+    reason: str | None = None,
+    until: datetime | None = None,
+    channel: discord.abc.GuildChannel | None = None,
+    last_known_username: str | None = None,
+) -> Case | None:
     """
     Creates a new case.
 
@@ -1000,7 +1000,7 @@ async def create_case(
         return case
 
 
-async def get_casetype(name: str, guild: Optional[discord.Guild] = None) -> Optional[CaseType]:
+async def get_casetype(name: str, guild: discord.Guild | None = None) -> CaseType | None:
     """
     Gets the case type
 
@@ -1024,7 +1024,7 @@ async def get_casetype(name: str, guild: Optional[discord.Guild] = None) -> Opti
     return casetype
 
 
-async def get_all_casetypes(guild: discord.Guild = None) -> List[CaseType]:
+async def get_all_casetypes(guild: discord.Guild = None) -> list[CaseType]:
     """
     Get all currently registered case types
 
@@ -1110,7 +1110,7 @@ async def register_casetype(
             raise RuntimeError("That case type is already registered!")
 
 
-async def register_casetypes(new_types: List[dict]) -> List[CaseType]:
+async def register_casetypes(new_types: list[dict]) -> list[CaseType]:
     """
     Registers multiple case types
 
@@ -1180,7 +1180,7 @@ async def get_modlog_channel(guild: discord.Guild) -> discord.TextChannel:
 
 
 async def set_modlog_channel(
-    guild: discord.Guild, channel: Union[discord.TextChannel, None]
+    guild: discord.Guild, channel: discord.TextChannel | None
 ) -> bool:
     """
     Changes the modlog channel

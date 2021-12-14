@@ -435,13 +435,13 @@ class Cleanup(commands.Cog):
             mone = await channel.fetch_message(one)
         except discord.errors.NotFound:
             return await ctx.send(
-                _("Could not find a message with the ID of {id}.".format(id=one))
+                _(f"Could not find a message with the ID of {one}.")
             )
         try:
             mtwo = await channel.fetch_message(two)
         except discord.errors.NotFound:
             return await ctx.send(
-                _("Could not find a message with the ID of {id}.".format(id=two))
+                _(f"Could not find a message with the ID of {two}.")
             )
         to_delete = await self.get_messages_for_deletion(
             channel=channel, before=mtwo, after=mone, delete_pinned=delete_pinned
@@ -538,9 +538,9 @@ class Cleanup(commands.Cog):
             is_cc = lambda name: False
         alias_cog = self.bot.get_cog("Alias")
         if alias_cog is not None:
-            alias_names: Set[str] = set(
+            alias_names: Set[str] = {
                 a.name for a in await alias_cog._aliases.get_global_aliases()
-            ) | set(a.name for a in await alias_cog._aliases.get_guild_aliases(ctx.guild))
+            } | {a.name for a in await alias_cog._aliases.get_guild_aliases(ctx.guild)}
             is_alias = lambda name: name in alias_names
         else:
             is_alias = lambda name: False
