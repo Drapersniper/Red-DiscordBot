@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 import lavalink
+from lavalink import NodeNotFound, PlayerNotFound
 from red_commons.logging import getLogger
 
 from redbot.core.data_manager import cog_data_path
@@ -107,9 +108,7 @@ class StartUpTasks(MixinMeta, metaclass=CompositeMetaClass):
                 else:
                     try:
                         player = lavalink.get_player(guild_id)
-                    except IndexError:
-                        player = None
-                    except KeyError:
+                    except (NodeNotFound, PlayerNotFound):
                         player = None
                 vc = 0
                 guild_data = await self.config.guild_from_id(guild.id).all()
@@ -180,9 +179,7 @@ class StartUpTasks(MixinMeta, metaclass=CompositeMetaClass):
             else:
                 try:
                     player = lavalink.get_player(guild_id)
-                except IndexError:
-                    player = None
-                except KeyError:
+                except (NodeNotFound, PlayerNotFound):
                     player = None
             if player is None:
                 guild_data = await self.config.guild_from_id(guild.id).all()
