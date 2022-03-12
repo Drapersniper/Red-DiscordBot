@@ -134,7 +134,7 @@ class StartUpTasks(MixinMeta, metaclass=CompositeMetaClass):
                             player = await lavalink.connect(vc, deafen=auto_deafen)
                             player.store("notify_channel", notify_channel_id)
                             break
-                        except IndexError:
+                        except NodeNotFound:
                             await asyncio.sleep(5)
                             tries += 1
                         except Exception as exc:
@@ -201,7 +201,7 @@ class StartUpTasks(MixinMeta, metaclass=CompositeMetaClass):
                         player = await lavalink.connect(vc, deafen=auto_deafen)
                         player.store("notify_channel", notify_channel_id)
                         break
-                    except IndexError:
+                    except NodeNotFound:
                         await asyncio.sleep(5)
                         tries += 1
                     except Exception as exc:
