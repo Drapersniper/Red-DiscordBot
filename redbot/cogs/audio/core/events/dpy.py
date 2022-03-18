@@ -24,7 +24,6 @@ from redbot.core.utils.chat_formatting import box, humanize_list, underline, bol
 from ...errors import TrackEnqueueError, AudioError
 from ..abc import MixinMeta
 from ..cog_utils import HUMANIZED_PERM, CompositeMetaClass, DANGEROUS_COMMANDS
-from ...utils import task_callback_trace
 
 log = getLogger("red.cogs.Audio.cog.Events.dpy")
 _ = Translator("Audio", Path(__file__))
