@@ -14,8 +14,8 @@ from ..converters import get_lazy_converter, get_playlist_converter
 __version__ = VersionInfo.from_json({"major": 2, "minor": 5, "micro": 0, "releaselevel": "final"})
 
 __author__ = ["aikaterna", "Draper"]
-_ = Translator("Audio", Path(__file__))
-
+T_ = Translator("Audio", Path(__file__))
+_ = lambda s: s
 _SCHEMA_VERSION: Final[int] = 3
 _OWNER_NOTIFICATION: Final[int] = 1
 
@@ -143,6 +143,8 @@ DANGEROUS_COMMANDS = {
     ),
     "command_llsetup_reset": _("This command will reset every setting changed by `[p]llset`."),
 }
+
+_ = T_
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
