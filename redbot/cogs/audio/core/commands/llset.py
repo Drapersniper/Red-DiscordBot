@@ -237,7 +237,7 @@ class LavalinkSetupCommands(MixinMeta, metaclass=CompositeMetaClass):
     @command_llsetup.command(name="port")
     @has_unmanaged_server()
     async def command_llsetup_wsport(
-        self, ctx: commands.Context, port: Optional[int] = DEFAULT_LAVALINK_SETTINGS["ws_port"]
+        self, ctx: commands.Context, port: int = DEFAULT_LAVALINK_SETTINGS["ws_port"]
     ):
         """Set the Lavalink node port.
 
