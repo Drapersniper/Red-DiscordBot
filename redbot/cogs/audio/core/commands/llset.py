@@ -237,13 +237,20 @@ class LavalinkSetupCommands(MixinMeta, metaclass=CompositeMetaClass):
     @command_llsetup.command(name="port")
     @has_unmanaged_server()
     async def command_llsetup_wsport(
-        self, ctx: commands.Context, port: int = DEFAULT_LAVALINK_SETTINGS["ws_port"]
+        self, ctx: commands.Context, port: Optional[int] = DEFAULT_LAVALINK_SETTINGS["ws_port"]
     ):
         """Set the Lavalink node port.
 
         This command sets the connection port which Audio will use to connect to an external Lavalink node.
         """
-
+        if port < 0 or port > 65535:
+            return await self.send_embed_msg(
+            ctx,
+            title=_("Setting Not Changed"),
+            description=_(
+                "A port must be between 0 and 65535 "
+            ),
+        )
         await self.config.ws_port.set(port)
         await self.send_embed_msg(
             ctx,
@@ -424,7 +431,7 @@ class LavalinkSetupCommands(MixinMeta, metaclass=CompositeMetaClass):
             return await self.send_embed_msg(
                 ctx,
                 title=_("Setting Not Changed"),
-                description=_("The the port must be between 1024 and 49151."),
+                description=_("The port must be between 1024 and 49151."),
             )
 
         await self.config.yaml.server.port.set(port)
