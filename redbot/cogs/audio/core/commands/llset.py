@@ -245,12 +245,10 @@ class LavalinkSetupCommands(MixinMeta, metaclass=CompositeMetaClass):
         """
         if port < 0 or port > 65535:
             return await self.send_embed_msg(
-            ctx,
-            title=_("Setting Not Changed"),
-            description=_(
-                "A port must be between 0 and 65535 "
-            ),
-        )
+                ctx,
+                title=_("Setting Not Changed"),
+                description=_("A port must be between 0 and 65535 "),
+            )
         await self.config.ws_port.set(port)
         await self.send_embed_msg(
             ctx,
